@@ -1,0 +1,72 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Astro site
+        run: npm run build
+
+      - name: Fix paths for GitHub Pages
+        run: |
+          python3 -c "
+          import re, os, glob
+          BASE = '/babi-yoga'
+          fixed_count = 0
+          for ext in ['html', 'css']:
+              for f in glob.glob(f'dist/**/*.{ext}', recursive=True):
+                  with open(f) as fh:
+                      c = fh.read()
+                  # Fix href, src, content attributes with absolute paths (not protocol-relative //)
+                  c2 = re.sub(r'((?:href|src|content)=\")(/(?!/))', r'\1' + BASE + r'\2', c)
+                  # Fix CSS url() with optional quotes
+                  c2 = re.sub(r'(url\([\"\\x27]?)(/(?!/))', r'\1' + BASE + r'\2', c2)
+                  if c2 != c:
+                      with open(f, 'w') as fh:
+                          fh.write(c2)
+                      fixed_count += 1
+                      print(f'  Fixed: {f}')
+          print(f'Done — {fixed_count} files patched for base path {BASE}')
+          "
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
