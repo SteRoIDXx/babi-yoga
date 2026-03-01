@@ -24,9 +24,13 @@ const { title, subtitle, backgroundImage, imagePosition = 'center', minHeight } 
     <>
       <img
         src={backgroundImage}
+        srcset={backgroundImage?.endsWith('.webp') ? `${backgroundImage.replace('.webp', '').replace('/images/', '/images/responsive/') + '-640w.webp'} 640w, ${backgroundImage.replace('.webp', '').replace('/images/', '/images/responsive/') + '-1024w.webp'} 1024w, ${backgroundImage} 1600w` : undefined}
+        sizes="100vw"
         alt=""
         role="presentation"
         loading="eager"
+        fetchpriority="high"
+        decoding="async"
         class="absolute inset-0 w-full h-full object-cover"
         style={`object-position: ${imagePosition};`}
       />

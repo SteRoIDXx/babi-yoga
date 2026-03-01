@@ -6,8 +6,12 @@
   <!-- Real background image -->
   <img
     src="/images/hero-bg.webp"
+    srcset="/images/responsive/hero-bg-640w.webp 640w, /images/responsive/hero-bg-1024w.webp 1024w, /images/hero-bg.webp 1600w"
+    sizes="100vw"
     alt="Meditation Hand-Mudra bei Sonnenuntergang"
     loading="eager"
+    fetchpriority="high"
+    decoding="async"
     class="absolute inset-0 w-full h-full object-cover"
   />
   <!-- Dark warm overlay so background image stays vivid -->

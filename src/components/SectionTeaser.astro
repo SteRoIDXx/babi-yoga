@@ -32,6 +32,8 @@ const {
         <div class="relative rounded-2xl overflow-hidden shadow-lg aspect-[4/3]">
           <img
             src={image}
+            srcset={`${image.replace('.webp', '').replace('/images/', '/images/responsive/') + '-640w.webp'} 640w, ${image.replace('.webp', '').replace('/images/', '/images/responsive/') + '-1024w.webp'} 1024w, ${image} 1600w`}
+            sizes="(max-width: 1023px) 100vw, 50vw"
             alt={imageAlt}
             loading="lazy"
             decoding="async"

@@ -22,6 +22,8 @@ const formattedDate = date.toLocaleDateString('de-DE', {
     <div class="aspect-[16/9] overflow-hidden">
       <img
         src={image}
+        srcset={image?.endsWith('.webp') ? `${image.replace('.webp', '').replace('/images/', '/images/responsive/') + '-640w.webp'} 640w, ${image.replace('.webp', '').replace('/images/', '/images/responsive/') + '-1024w.webp'} 1024w, ${image} 1600w` : undefined}
+        sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
         alt={imageAlt || title}
         loading="lazy"
         decoding="async"
