@@ -1,0 +1,102 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+
+const testimonials = [
+  { name: 'Verena H.', text: 'Freude, innere Stärke und Ruhe kehren während und nach den Yogastunden bei mir ein. In der Zeit der Schwangerschaft habe ich vor allem auch physische Kraft hinzugewonnen.' },
+  { name: 'Sabine W.', text: 'Vor der gestrigen Stunde hatte ich überhaupt keine Lust auf Yoga und dann wurde es so ein toller, genussvoller Kurs.' },
+  { name: 'Doreen H.', text: 'Yoga ist gut für Geist und Körper. Du strahlst eine sehr freundliche und angenehme Gelassenheit und Ruhe aus.' },
+  { name: 'Sandra M.', text: 'Das Yogawochenende hat mir sehr viel gegeben. Nicht nur körperlich, sondern auch auf geistiger Ebene.' },
+  { name: 'Malte J.', text: 'Vielen Dank für den Kurs und die gemeinsamen Übungsstunden: Ich habe mich in der Übungsausführung und -variation sehr wohl gefühlt.' },
+  { name: 'Margarete D.', text: 'Danke für den letzten Kurs und die tolle Begleitung. Ich freue mich bereits jetzt schon auf den Kurs im Januar.' },
+  { name: 'Britta T.', text: 'Der Workshop Yoga und Laufen hat Spaß gemacht. Ich laufe seitdem bewusster und achte auf meinen Laufstil.' },
+  { name: 'Ali B.', text: 'Ich habe seit dem Lauftraining und mit den Tipps zum Laufstil aus dem Workshop keine Kniebeschwerden mehr.' },
+  { name: 'Nicole W.', text: 'Yin Yoga hat mir sehr gut gefallen. Das lang gehaltene Dehnen war mir neu und hat sehr gut getan.' },
+  { name: 'Alexander K.', text: 'Ich komme endlich wieder an meine Zehen…' },
+  { name: 'Jenny L.', text: 'Yoga: Große Wirkung auf Körper und Seele. Du bist eine Inspiration und Bereicherung für mein Leben.' },
+  { name: 'Birgit L.', text: 'Du bist eine einfühlsame, kompetente, freundliche Führerin.' },
+  { name: 'Beate N.', text: 'Yoga bedeutet für mich das Lösen von Spannungen und Ängsten, bewusster seinen Körper wahrzunehmen.' },
+  { name: 'Ruth J.', text: 'Ich mag die Mischung aus körperlich anstrengenden und entspannenden Übungen.' },
+  { name: 'Kerstin M.-K.', text: 'Die Yogastunden sind für mich ein guter Mix aus Körperhaltung, Atemtechnik und Entspannung.' },
+  { name: 'Sandra T.', text: 'Yoga und die damit verbundene Atmung tut mir gut. Ich empfinde Dich als sehr angenehm und authentisch.' },
+  { name: 'Anke F.', text: 'Meine Erfahrungen in Sachen Yoga: wenige bisher, aber eindeutig pro. Einfach Klasse!' },
+  { name: 'Indra H.', text: 'Ich mag Deine klare Art und das direkte Miteinander.' },
+  { name: 'Anja P.', text: 'Du bist sehr gewissenhaft und professionell.' },
+];
+---
+
+<Layout
+  title="Kundenstimmen — Babi Yoga"
+  description="Was Teilnehmer:innen über Babi Yoga sagen. Erfahrungsberichte zu Yogakursen, Workshops und Retreats in Neu Wulmstorf."
+>
+  <PageHero
+    title="Kundenstimmen"
+    subtitle="Was meine Teilnehmer:innen sagen."
+    backgroundImage="/images/yoga-gruppe.webp"
+    imagePosition="center 25%"
+  />
+
+  <!-- Intro -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="fade-in text-charcoal/85 text-lg leading-relaxed">
+        Jede Rückmeldung bedeutet mir sehr viel. Hier teile ich einige Stimmen von Menschen,
+        die bei Babi-Yoga Yoga praktizieren oder praktiziert haben.
+      </p>
+    </div>
+  </section>
+
+  <!-- Testimonials Grid -->
+  <section class="section-padding bg-warm-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="columns-1 sm:columns-2 lg:columns-3 gap-5 stagger">
+        {testimonials.map((t) => (
+          <div class="fade-in break-inside-avoid mb-5">
+            <div class="bg-white rounded-2xl border border-sand-dark p-6 hover:shadow-md transition-shadow duration-300">
+              <svg class="w-6 h-6 text-gold/50 mb-3" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+              </svg>
+              <p class="text-charcoal/80 text-sm leading-relaxed italic mb-4">„{t.text}"</p>
+              <p class="text-xs font-semibold text-wine">{t.name}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ProvenExpert -->
+  <section class="py-12 bg-cream">
+    <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="fade-in p-6 bg-white rounded-xl border border-sand-dark">
+        <h3 class="font-heading font-bold text-dark mb-3">Noch mehr Bewertungen</h3>
+        <p class="text-sm text-charcoal/70 mb-4">
+          Auf ProvenExpert findest du weitere Erfahrungsberichte und verifizierte Bewertungen.
+        </p>
+        <a
+          href="https://www.provenexpert.com/babi-yoga/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm font-semibold text-wine hover:text-magenta transition-colors"
+        >
+          Zu ProvenExpert →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-padding bg-warm-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-4">Probier es selbst aus</h2>
+      <p class="fade-in text-charcoal/80 text-lg mb-8">
+        Melde dich für einen Kurs an und mach dir dein eigenes Bild.
+        Ich freue mich auf dich!
+      </p>
+      <div class="fade-in flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/kontakt" class="btn btn-primary">Jetzt anmelden</a>
+        <a href="/yoga" class="btn btn-outline">Kursangebot ansehen</a>
+      </div>
+    </div>
+  </section>
+</Layout>

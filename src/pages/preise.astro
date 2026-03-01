@@ -1,0 +1,131 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+
+const yogaPreise = [
+  { name: 'Mini-Abo', price: '55 €/Monat', details: '1× pro Woche · Laufzeit 1 Jahr', highlight: false },
+  { name: 'Maxi-Abo', price: '85 €/Monat', details: 'Alle Termine · Laufzeit 3 Monate', highlight: true },
+  { name: 'Probemonat', price: '70 € einmalig', details: 'Alle Termine · 1 Monat', highlight: false },
+  { name: '10er Karte', price: '200 €', details: '10 Termine · gültig 1 Jahr', highlight: false },
+  { name: 'Präventionskarte', price: '200 €', details: '10 feste Termine · 1 Kursblock', highlight: false },
+  { name: 'Drop In', price: '22 €', details: '1 gebuchter Termin', highlight: false },
+  { name: 'Kinderyoga', price: '110 € einmalig', details: '9 feste Termine · 1 Kursblock', highlight: false },
+];
+
+const partnerAngebote = [
+  { name: 'EGYM Wellpass', info: 'Teilnahme über Partnerschaft möglich' },
+  { name: 'machtfit', info: 'Teilnahme über Partnerschaft möglich' },
+];
+
+const ayurvedaPreise = [
+  { name: 'Teilkörpermassage', duration: '30 Min.', price: '49 €' },
+  { name: 'Abhyanga Ganzkörpermassage', duration: '60 Min.', price: '89 €' },
+  { name: 'Abhyanga Ganzkörpermassage', duration: '90 Min.', price: '119 €' },
+  { name: 'Ayurveda Erstgespräch', duration: '90 Min.', price: '199 €' },
+  { name: 'Konstitutionsbestimmung', duration: 'inkl. Auswertung', price: '69 €' },
+  { name: 'Folgegespräch', duration: '60 Min.', price: '99 €' },
+  { name: 'Ayurveda-Special', duration: 'Erstgespräch + Konstitution + Folgegespräch + Behandlung', price: '409 €' },
+];
+---
+
+<Layout
+  title="Preise — Babi Yoga"
+  description="Aktuelle Preise für Yogakurse, Abos, Zehnerkarten und Ayurveda-Massagen bei Babi Yoga in Neu Wulmstorf."
+>
+  <PageHero
+    title="Preise"
+    subtitle="Transparent und fair."
+    backgroundImage="/images/yoga-studio.webp"
+    imagePosition="center 50%"
+  />
+
+  <!-- Yoga-Preise -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-8 text-center">Yoga-Kurse</h2>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
+        {yogaPreise.map((item) => (
+          <div class={`fade-in rounded-2xl p-6 text-center border ${item.highlight ? 'bg-wine text-white border-wine shadow-lg' : 'bg-white border-sand-dark'}`}>
+            <h3 class={`font-heading text-lg font-bold mb-2 ${item.highlight ? 'text-white' : 'text-dark'}`}>{item.name}</h3>
+            <p class={`font-heading text-2xl font-bold mb-2 ${item.highlight ? 'text-gold' : 'text-wine'}`}>{item.price}</p>
+            <p class={`text-sm ${item.highlight ? 'text-white/80' : 'text-charcoal/70'}`}>{item.details}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Extras -->
+      <div class="fade-in mt-8 bg-white rounded-xl border border-sand-dark p-6">
+        <div class="flex flex-wrap gap-6 justify-center text-sm text-charcoal/80">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-gold"></span>
+            <span><strong>Studentenrabatt:</strong> 10 % auf Zehnerkarten und Abos</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-gold"></span>
+            <span><strong>Krankenkassenzuschuss:</strong> Präventionskurse bis zu 100 % erstattbar</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Partner -->
+      <div class="fade-in mt-6 flex flex-wrap gap-4 justify-center">
+        {partnerAngebote.map((p) => (
+          <div class="px-4 py-2 bg-sand rounded-full text-sm text-charcoal">
+            <strong>{p.name}</strong> — {p.info}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Ayurveda-Preise -->
+  <section class="section-padding bg-warm-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-8 text-center">Ayurveda & Massagen</h2>
+
+      <div class="fade-in bg-white rounded-2xl border border-sand-dark overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-wine/5">
+              <th class="text-left p-4 font-heading font-bold text-dark">Angebot</th>
+              <th class="text-left p-4 font-heading font-bold text-dark hidden sm:table-cell">Dauer</th>
+              <th class="text-right p-4 font-heading font-bold text-dark">Preis</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ayurvedaPreise.map((item, i) => (
+              <tr class={i % 2 === 0 ? 'bg-white' : 'bg-cream/50'}>
+                <td class="p-4 text-charcoal/85">
+                  <span class="font-medium">{item.name}</span>
+                  <span class="block sm:hidden text-xs text-charcoal/60 mt-0.5">{item.duration}</span>
+                </td>
+                <td class="p-4 text-charcoal/70 hidden sm:table-cell">{item.duration}</td>
+                <td class="p-4 text-right font-bold text-wine">{item.price}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p class="fade-in text-xs text-charcoal/50 text-center mt-4">
+        Weitere ayurvedische Anwendungen auf Anfrage. Zahlung per Überweisung, PayPal oder bar.
+        Kostenfreie Stornierung bis 24 Stunden vor dem Termin.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-4">Bereit loszulegen?</h2>
+      <p class="fade-in text-charcoal/80 text-lg mb-8">
+        Alle Preise inkl. der gesetzlichen MwSt. Melde dich einfach per Telefon oder Kontaktformular an.
+      </p>
+      <div class="fade-in flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/kontakt" class="btn btn-primary">Jetzt anmelden</a>
+        <a href="/yoga" class="btn btn-outline">Kursangebot ansehen</a>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,111 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+
+const products = [
+  {
+    title: 'Zinzino BalanceTest & BalanceOil+',
+    description: 'Mit dem BalanceTest von Zinzino kannst du ganz einfach und anonym zu Hause testen lassen, wie ausgewogen dein Omega-6-zu-Omega-3-Verhältnis ist. Die BalanceOils helfen dir, Schritt für Schritt ins Gleichgewicht zu kommen — ein echter Gamechanger für nachhaltige Gesundheit.',
+    category: 'Nahrungsergänzung',
+    href: 'https://www.zinzino.com',
+  },
+  {
+    title: 'dōTERRA — Ätherische Öle',
+    description: 'Die Kraft der Natur begeistert mich schon lange — und mit ätherischen Ölen von dōTERRA habe ich eine neue Dimension für meine eigene Gesundheit, meine Yogapraxis und viele Alltagssituationen entdeckt. Meine Favoriten für Alltag, Wohlbefinden und Yoga.',
+    category: 'Ätherische Öle',
+    href: 'https://www.doterra.com/DE/de_DE',
+  },
+  {
+    title: 'FitLine Nährstoffsystem',
+    description: 'Mit FitLine habe ich ein Nährstoffsystem gefunden, das mich durch meine anspruchsvollen Tage trägt. Es unterstützt mich morgens, mittags und abends mit allem, was mein Körper und mein Geist brauchen — in einer Form, die wirklich wirkt.',
+    category: 'Nahrungsergänzung',
+    href: 'https://www.fitline.com',
+  },
+  {
+    title: 'Amla — Ayurvedisch würzen',
+    description: 'Mein Tipp für alle, die auf hochwertige Gewürze setzen möchten. Ayurveda ist bekannt für seine köstliche, vielfältige und bekömmliche Küche. Die richtige Verwendung von Gewürzen spielt dabei eine entscheidende Rolle. Ich schätze an Amla die Klarheit, das Engagement für Nachhaltigkeit und die ehrliche Kommunikation.',
+    category: 'Ayurveda-Küche',
+    href: 'https://www.amlafoods.com',
+  },
+  {
+    title: 'Energie-Waschkugel — Nachhaltig sauber',
+    description: 'Mit der Energie-Waschkugel wasche ich unsere Wäsche fast ganz ohne Waschmittel — sauber, hautfreundlich und umweltschonend. Besonders geeignet für Familien mit sensibler Haut oder Babys. Spart Verpackung, Geld und jede Menge Chemie.',
+    category: 'Nachhaltigkeit',
+    href: null,
+  },
+];
+---
+
+<Layout
+  title="Empfehlungen — Babi Yoga"
+  description="Persönliche Produktempfehlungen von Nikola Babi: Nahrungsergänzung, ätherische Öle, Ayurveda-Gewürze und nachhaltige Alltagshelfer."
+>
+  <PageHero
+    title="Empfehlungen"
+    subtitle="Aus Überzeugung für dich ausgewählt."
+    backgroundImage="/images/beratung.webp"
+    imagePosition="center 30%"
+  />
+
+  <!-- Intro -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="fade-in text-charcoal/85 text-lg leading-relaxed">
+        Im Laufe der Zeit habe ich einige Produkte kennengelernt, die mich wirklich überzeugt haben
+        und die ich selbst regelmäßig nutze. Hier findest du meine persönlichen Empfehlungen —
+        sorgfältig ausgesucht, mit Herz und aus eigener Erfahrung.
+      </p>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section class="section-padding bg-warm-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 stagger">
+      {products.map((product) => (
+        <div class="fade-in bg-white rounded-2xl border border-sand-dark p-6 sm:p-8">
+          <div class="flex items-start justify-between gap-4 mb-3">
+            <h3 class="font-heading text-xl font-bold text-dark">{product.title}</h3>
+            <span class="px-3 py-1 bg-sand rounded-full text-xs font-medium text-charcoal whitespace-nowrap flex-shrink-0">
+              {product.category}
+            </span>
+          </div>
+          <p class="text-charcoal/80 text-sm leading-relaxed mb-4">{product.description}</p>
+          {product.href && (
+            <a
+              href={product.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-sm font-semibold text-wine hover:text-magenta transition-colors"
+            >
+              Mehr Infos →
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Affiliate Hinweis -->
+  <section class="py-8 bg-cream">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="text-xs text-charcoal/50 text-center leading-relaxed">
+        <strong>Hinweis:</strong> Einige der hier genannten Links sind Affiliate- bzw. Partnerlinks.
+        Wenn du über diese Links bestellst, erhalte ich eine kleine Provision — für dich entstehen dabei keine Mehrkosten.
+        Ich empfehle ausschließlich Produkte, die ich selbst nutze und von denen ich überzeugt bin.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-padding bg-warm-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-4">Fragen zu den Produkten?</h2>
+      <p class="fade-in text-charcoal/80 text-lg mb-8">
+        Schreib mir gern — ich berate dich auch persönlich zu Ayurveda, Ernährung und Selbstfürsorge im Alltag.
+      </p>
+      <div class="fade-in">
+        <a href="/kontakt" class="btn btn-primary">Kontakt aufnehmen</a>
+      </div>
+    </div>
+  </section>
+</Layout>
