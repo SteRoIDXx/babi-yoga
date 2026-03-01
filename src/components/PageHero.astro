@@ -44,11 +44,11 @@ const { title, subtitle, backgroundImage, imagePosition = 'center', minHeight } 
     backgroundImage ? 'pb-10 sm:pb-14 text-left sm:text-left' : 'text-center py-0',
     !backgroundImage && 'flex flex-col items-center justify-center min-h-[200px]',
   ]}>
-    <h1 class="fade-in font-heading font-bold text-white leading-tight mb-3" style={`font-size: var(--text-section); ${backgroundImage ? 'text-shadow: 0 2px 12px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3);' : ''}`}>
+    <h1 class="fade-in font-heading font-bold text-cream leading-tight mb-3" style={`font-size: var(--text-section); text-shadow: 0 2px 8px rgba(0,0,0,0.5);`}>
       {title}
     </h1>
     {subtitle && (
-      <p class="fade-in text-white/85 text-lg sm:text-xl max-w-2xl" style={backgroundImage ? 'text-shadow: 0 1px 8px rgba(0,0,0,0.4);' : ''}>
+      <p class="fade-in text-cream/85 text-lg sm:text-xl max-w-2xl" style="text-shadow: 0 1px 6px rgba(0,0,0,0.4);">
         {subtitle}
       </p>
     )}

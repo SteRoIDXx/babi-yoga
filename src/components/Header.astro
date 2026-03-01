@@ -5,19 +5,47 @@ interface Props {
 
 const { currentPath = '/' } = Astro.props;
 
-const navItems = [
+// Desktop: 9 Kernseiten — klar & aufgeräumt
+const desktopNavItems = [
   { label: 'Startseite', href: '/' },
   { label: 'Yoga', href: '/yoga' },
   { label: 'Büro-Yoga', href: '/buero-yoga' },
   { label: 'Ayurveda', href: '/ayurveda' },
   { label: 'Preise', href: '/preise' },
   { label: 'Reisen', href: '/reisen' },
-  { label: 'Veranstaltungen', href: '/veranstaltungen' },
-  { label: 'Mediathek', href: '/mediathek' },
-  { label: 'Empfehlungen', href: '/empfehlungen' },
-  { label: 'Blog', href: '/blog' },
   { label: 'Über mich', href: '/ueber-mich' },
+  { label: 'Blog', href: '/blog' },
   { label: 'Kontakt', href: '/kontakt' },
+];
+
+// Mobile: alle Seiten, logisch gruppiert
+const mobileNavGroups = [
+  {
+    heading: 'Angebot',
+    items: [
+      { label: 'Yoga', href: '/yoga' },
+      { label: 'Büro-Yoga', href: '/buero-yoga' },
+      { label: 'Ayurveda & Massagen', href: '/ayurveda' },
+      { label: 'Preise', href: '/preise' },
+    ],
+  },
+  {
+    heading: 'Erleben',
+    items: [
+      { label: 'Reisen & Retreats', href: '/reisen' },
+      { label: 'Veranstaltungen', href: '/veranstaltungen' },
+      { label: 'Mediathek', href: '/mediathek' },
+      { label: 'Blog', href: '/blog' },
+    ],
+  },
+  {
+    heading: 'Mehr erfahren',
+    items: [
+      { label: 'Über mich', href: '/ueber-mich' },
+      { label: 'Empfehlungen', href: '/empfehlungen' },
+      { label: 'Kundenstimmen', href: '/kundenstimmen' },
+    ],
+  },
 ];
 
 function isActive(href: string): boolean {
@@ -39,15 +67,15 @@ function isActive(href: string): boolean {
         />
       </a>
 
-      <!-- Desktop Navigation — centered in available space after logo -->
-      <nav class="hidden xl:flex flex-1 items-center justify-center gap-0.5 pl-8" aria-label="Hauptnavigation">
-        {navItems.map((item) => (
+      <!-- Desktop Navigation — zentriert im Raum zwischen Logo und rechtem Rand -->
+      <nav class="hidden lg:flex flex-1 items-center justify-center gap-1" aria-label="Hauptnavigation">
+        {desktopNavItems.map((item) => (
           <a
             href={item.href}
-            class={`nav-link px-2.5 py-2 text-[0.8125rem] font-medium tracking-wide transition-colors duration-300 relative min-h-[44px] flex items-center ${
+            class={`nav-link px-2.5 py-2 text-[0.8125rem] font-medium tracking-wide transition-colors duration-300 relative min-h-[44px] flex items-center whitespace-nowrap ${
               isActive(item.href)
-                ? 'text-wine'
-                : 'text-charcoal/80 hover:text-wine'
+                ? 'text-wine font-semibold'
+                : 'text-charcoal hover:text-wine'
             }`}
             aria-current={isActive(item.href) ? 'page' : undefined}
           >
@@ -59,7 +87,7 @@ function isActive(href: string): boolean {
       <!-- Mobile Menu Button -->
       <button
         id="mobile-menu-btn"
-        class="xl:hidden flex flex-col gap-[5px] p-2 group min-w-[44px] min-h-[44px] items-center justify-center"
+        class="lg:hidden flex flex-col gap-[5px] p-2 group min-w-[44px] min-h-[44px] items-center justify-center"
         aria-label="Menü öffnen"
         aria-expanded="false"
       >
@@ -74,10 +102,11 @@ function isActive(href: string): boolean {
 <!-- Mobile Navigation Overlay -->
 <div id="nav-overlay" class="nav-overlay"></div>
 
-<!-- Mobile Navigation Panel -->
+<!-- Mobile Navigation Panel — gruppiert für bessere Übersicht -->
 <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile Navigation">
   <div class="flex flex-col h-full">
-    <div class="flex justify-end mb-8">
+    <!-- Close Button -->
+    <div class="flex justify-end mb-4">
       <button id="mobile-nav-close" class="p-2 text-charcoal min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Menü schließen">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M18 6L6 18M6 6l12 12" />
@@ -85,23 +114,51 @@ function isActive(href: string): boolean {
       </button>
     </div>
 
-    <div class="flex flex-col gap-1">
-      {navItems.map((item) => (
-        <a
-          href={item.href}
-          class={`mobile-nav-link block px-4 py-3 text-lg font-medium rounded-lg transition-all duration-300 min-h-[44px] ${
-            isActive(item.href)
-              ? 'text-wine bg-wine/5'
-              : 'text-charcoal hover:text-wine hover:bg-wine/5'
-          }`}
-          aria-current={isActive(item.href) ? 'page' : undefined}
-        >
-          {item.label}
-        </a>
+    <!-- Startseite -->
+    <a
+      href="/"
+      class={`mobile-nav-link block px-4 py-3 text-lg font-semibold rounded-lg transition-all duration-300 min-h-[44px] mb-2 ${
+        isActive('/')
+          ? 'text-wine bg-wine/5'
+          : 'text-charcoal hover:text-wine hover:bg-wine/5'
+      }`}
+      aria-current={isActive('/') ? 'page' : undefined}
+    >
+      Startseite
+    </a>
+
+    <!-- Gruppierte Navigation -->
+    <div class="flex flex-col gap-5 overflow-y-auto">
+      {mobileNavGroups.map((group) => (
+        <div>
+          <p class="px-4 text-[0.6875rem] font-bold tracking-[0.15em] uppercase text-charcoal/40 mb-1">{group.heading}</p>
+          <div class="flex flex-col">
+            {group.items.map((item) => (
+              <a
+                href={item.href}
+                class={`mobile-nav-link block px-4 py-3 text-base font-medium rounded-lg transition-all duration-300 min-h-[44px] ${
+                  isActive(item.href)
+                    ? 'text-wine bg-wine/5'
+                    : 'text-charcoal hover:text-wine hover:bg-wine/5'
+                }`}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
       ))}
     </div>
 
-    <div class="mt-auto pt-8 border-t border-sand-dark">
+    <!-- Kontakt (prominent, unten) -->
+    <div class="mt-auto pt-6 border-t border-sand-dark">
+      <a
+        href="/kontakt"
+        class="mobile-nav-link block text-center py-3 text-base font-semibold text-wine rounded-full border-2 border-wine hover:bg-wine hover:text-white transition-all duration-300 min-h-[44px] mb-3"
+      >
+        Kontakt
+      </a>
       <p class="text-center text-sm text-gray-muted">0171 588 4552</p>
     </div>
   </div>
