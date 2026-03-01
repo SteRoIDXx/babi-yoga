@@ -1,0 +1,65 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  href: string;
+  cta?: string;
+  reversed?: boolean;
+  bgClass?: string;
+}
+
+const {
+  title,
+  subtitle,
+  description,
+  image,
+  imageAlt,
+  href,
+  cta = 'Mehr erfahren',
+  reversed = false,
+  bgClass = '',
+} = Astro.props;
+---
+
+<section class={`section-padding ${bgClass}`}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class={`flex flex-col ${reversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-10 lg:gap-16`}>
+      <!-- Image -->
+      <div class={`w-full lg:w-1/2 ${reversed ? 'fade-in-right' : 'fade-in-left'}`}>
+        <div class="relative rounded-2xl overflow-hidden shadow-lg aspect-[4/3]">
+          <img
+            src={image}
+            alt={imageAlt}
+            loading="lazy"
+            decoding="async"
+            class="w-full h-full object-cover object-top"
+          />
+          <!-- Subtle gradient overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-night/10 to-transparent"></div>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div class={`w-full lg:w-1/2 ${reversed ? 'fade-in-left' : 'fade-in-right'}`}>
+        {subtitle && (
+          <span class="section-label mb-4 block">{subtitle}</span>
+        )}
+        <h2 class="font-heading font-bold text-dark mb-4" style="font-size: var(--text-heading);">
+          {title}
+        </h2>
+        <p class="text-charcoal/80 leading-relaxed mb-6 text-lg">
+          {description}
+        </p>
+        <a href={href} class="inline-flex items-center gap-2 text-wine font-semibold hover:gap-3 transition-all duration-300 group">
+          {cta}
+          <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M5 12h14m-7-7l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

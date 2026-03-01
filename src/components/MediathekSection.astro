@@ -1,0 +1,82 @@
+---
+import SectionHeading from './SectionHeading.astro';
+---
+
+<section id="mediathek" class="section-padding bg-warm-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHeading
+      label="Videos & Podcast"
+      title="Mediathek"
+      subtitle="Kostenfreie Probestunde, Yoga-Videos und mein Podcast."
+    />
+
+    <div class="max-w-4xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Probestunde Video -->
+        <div class="fade-in-left">
+          <div class="bg-white rounded-2xl overflow-hidden border border-sand-dark shadow-sm">
+            <div class="aspect-video bg-sand flex items-center justify-center relative group cursor-pointer">
+              <div class="absolute inset-0 bg-gradient-to-t from-night/20 to-transparent"></div>
+              <div class="relative z-10 w-16 h-16 rounded-full bg-wine/90 flex items-center justify-center group-hover:bg-wine transition-colors duration-300 group-hover:scale-110 transform">
+                <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+              <p class="absolute bottom-3 left-0 right-0 text-center text-white text-xs font-medium z-10">
+                Aus datenschutzrechtlichen Gründen benötigt YouTube Ihre Einwilligung
+              </p>
+            </div>
+            <div class="p-5">
+              <h3 class="font-heading text-lg font-bold text-dark mb-1">Kostenfreie Probestunde</h3>
+              <p class="text-sm text-gray-muted">Probiere Yoga bequem von zu Hause aus</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Podcast -->
+        <div class="fade-in-right">
+          <div class="bg-white rounded-2xl overflow-hidden border border-sand-dark shadow-sm h-full flex flex-col">
+            <div class="aspect-video bg-gradient-to-br from-wine/10 to-gold/10 flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-5xl mb-3">🎙️</div>
+                <p class="font-heading font-bold text-dark text-lg">Babi Yoga Podcast</p>
+              </div>
+            </div>
+            <div class="p-5 flex-1 flex flex-col">
+              <h3 class="font-heading text-lg font-bold text-dark mb-1">Mein Podcast</h3>
+              <p class="text-sm text-gray-muted mb-4">Inspirationen, Yoga-Wissen und Geschichten aus meiner Praxis</p>
+              <div class="mt-auto">
+                <a href="#" class="btn btn-outline text-sm px-5 py-2">Anhören</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 24 Wochen Yoga Kurs -->
+      <div class="fade-in mt-12">
+        <div class="bg-gradient-to-r from-wine/5 to-gold/5 rounded-2xl p-6 sm:p-8 border border-wine/10">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <div class="flex-1">
+              <span class="inline-block px-3 py-1 bg-gold/20 text-dark text-xs font-bold rounded-full mb-3">Online-Kurs</span>
+              <h3 class="font-heading text-2xl font-bold text-dark mb-2">24 Wochen Yoga</h3>
+              <p class="text-charcoal/80 mb-3">
+                23 abwechslungsreiche Yoga-Übungsvideos zum Üben nach deinem eigenen Zeitplan.
+                Übe wann und wo es dir am besten passt!
+              </p>
+              <div class="flex items-baseline gap-3">
+                <span class="font-heading text-2xl font-bold text-wine">199 €</span>
+                <span class="text-sm text-gray-muted line-through">368 €</span>
+                <span class="text-xs font-medium text-white bg-wine rounded-full px-2 py-0.5">-46%</span>
+              </div>
+              <p class="text-xs text-gray-muted mt-1">inkl. MwSt. · Abo-Inhaber: 69 €</p>
+            </div>
+            <div class="flex-shrink-0">
+              <a href="#kontakt" class="btn btn-primary">Jetzt teilnehmen</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,112 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+const concerns = [
+  { icon: '🍃', title: 'Stress & Erschöpfung' },
+  { icon: '🌿', title: 'Darmgesundheit & Verdauung' },
+  { icon: '✨', title: 'Gewichtsregulation & Detox' },
+  { icon: '🌸', title: 'Hautprobleme' },
+  { icon: '🌙', title: 'Hormonelle Veränderungen' },
+  { icon: '🕊️', title: 'Gesund älter werden' },
+];
+
+const services = [
+  'Psychologische Beratung',
+  'Ayurvedische Gesundheits- und Ernährungsberatung',
+  'Detox- und Regenerationskuren',
+  'Konstitutionsbestimmung',
+  'Individueller Behandlungsplan',
+  'Ayurvedische Massagen',
+  'Meditation, Atem- und Entspannungsübungen',
+  'Yoga',
+];
+
+const massages = [
+  {
+    name: 'Abhyanga',
+    description: 'Die Königin der Massagen — traditionelle ayurvedische Ganzkörpermassage mit warmen, individuell abgestimmten biologischen Ölen. Tiefe Entspannung, Regeneration und Vitalisierung.',
+    highlight: true,
+  },
+  { name: 'Massage für Frauen', description: 'Speziell abgestimmt bei Kinderwunsch, in der Schwangerschaft oder den Wechseljahren.' },
+  { name: 'Teilkörpermassagen', description: 'Gesicht, Füße oder Rücken — gezielt dort, wo es nötig ist.' },
+  { name: 'Honigmassage', description: 'Entgiftend und durchblutungsfördernd mit reinem Honig.' },
+  { name: 'Kräuterpulvermassage', description: 'Anregend und straffend mit ayurvedischen Kräutern.' },
+  { name: 'Seidenhandschuhmassage', description: 'Sanft belebend, ideal für empfindliche Haut.' },
+  { name: 'Katibasti', description: 'Ölanwendung für den unteren Rücken — wohltuend bei Verspannungen.' },
+];
+---
+
+<section id="ayurveda" class="section-padding bg-warm-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHeading
+      label="Ganzheitliche Begleitung"
+      title="Ayurveda & Massagen"
+      subtitle="Ganzheitliche Begleitung für Körper, Geist und Wohlbefinden — individuell auf dich abgestimmt."
+    />
+
+    <!-- Was ist dein Anliegen? -->
+    <div class="fade-in grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-16 stagger">
+      {concerns.map((item) => (
+        <div class="fade-in text-center p-4 rounded-xl bg-sand/50 hover:bg-sand transition-colors duration-300">
+          <div class="text-2xl mb-2">{item.icon}</div>
+          <p class="text-sm font-medium text-charcoal">{item.title}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- Two Column: Services + Abhyanga Highlight -->
+    <div class="grid lg:grid-cols-2 gap-12 items-start mb-16">
+      <!-- Services List -->
+      <div class="fade-in-left">
+        <h3 class="font-heading text-xl font-bold text-dark mb-6">
+          Mein Schwerpunkt: Vorsorge und Selbstfürsorge
+        </h3>
+        <ul class="space-y-3">
+          {services.map((service) => (
+            <li class="flex items-start gap-3 text-charcoal">
+              <span class="w-1.5 h-1.5 rounded-full bg-wine mt-2.5 flex-shrink-0"></span>
+              <span>{service}</span>
+            </li>
+          ))}
+        </ul>
+        <div class="mt-8">
+          <a href="#kontakt" class="btn btn-outline">Kostenfreie Erstberatung</a>
+        </div>
+      </div>
+
+      <!-- Abhyanga Highlight -->
+      <div class="fade-in-right">
+        <div class="relative p-8 bg-gradient-to-br from-wine/5 to-gold/5 rounded-2xl border border-wine/10">
+          <span class="absolute -top-3 left-6 px-3 py-1 bg-gold text-charcoal text-xs font-bold rounded-full">
+            Beliebteste Behandlung
+          </span>
+          <h3 class="font-heading text-2xl font-bold text-dark mb-4 mt-2">Abhyanga</h3>
+          <p class="font-heading italic text-wine text-lg mb-4">
+            „Liebende Hände"
+          </p>
+          <p class="text-charcoal/80 leading-relaxed">
+            Abhyanga ist die Königin der Massagen und eine der effektivsten Behandlungsformen
+            der ayurvedischen Gesundheitslehre. Für jede Behandlung verwende ich individuell
+            auf dich abgestimmte, hochwertige biologische Öle. Wohltuende Massagetechniken
+            verschmelzen ineinander, was eine tiefe Entspannung, Regeneration und Vitalisierung
+            des ganzen Körpers bewirkt.
+          </p>
+          <a href="#kontakt" class="btn btn-primary mt-6">Massage buchen</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- All Massage Types -->
+    <div class="fade-in">
+      <h3 class="font-heading text-xl font-bold text-dark mb-6 text-center">Weitere Massagen</h3>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
+        {massages.filter(m => !m.highlight).map((massage) => (
+          <div class="fade-in p-5 bg-white rounded-xl border border-sand-dark hover:border-wine/20 transition-colors duration-300">
+            <h4 class="font-bold text-dark mb-1">{massage.name}</h4>
+            <p class="text-sm text-gray-muted">{massage.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

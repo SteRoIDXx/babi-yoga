@@ -1,0 +1,96 @@
+---
+---
+
+<section id="kontakt" class="section-padding bg-warm-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto text-center">
+      <div class="fade-in mb-4">
+        <span class="section-label">Kontakt</span>
+      </div>
+      <div class="fade-in flex justify-center mb-6">
+        <hr class="section-divider" />
+      </div>
+      <h2 class="fade-in font-heading font-bold text-dark mb-6" style="font-size: var(--text-section);">
+        Schreib mir
+      </h2>
+      <p class="fade-in text-gray-muted text-lg mb-12">
+        Du hast Fragen zu meinen Kursen, möchtest einen Termin buchen oder eine Massage vereinbaren?
+        Ich freue mich auf deine Nachricht.
+      </p>
+
+      <!-- Contact Form -->
+      <form class="fade-in max-w-lg mx-auto text-left space-y-5">
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label for="name" class="block text-sm font-medium text-dark mb-1.5">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              class="w-full px-4 py-3 rounded-xl border border-sand-dark bg-white text-charcoal placeholder-gray-muted/50 focus:outline-none focus:border-wine focus:ring-2 focus:ring-wine/10 transition-all duration-300"
+              placeholder="Dein Name"
+            />
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium text-dark mb-1.5">E-Mail</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              class="w-full px-4 py-3 rounded-xl border border-sand-dark bg-white text-charcoal placeholder-gray-muted/50 focus:outline-none focus:border-wine focus:ring-2 focus:ring-wine/10 transition-all duration-300"
+              placeholder="deine@email.de"
+            />
+          </div>
+        </div>
+        <div>
+          <label for="subject" class="block text-sm font-medium text-dark mb-1.5">Betreff</label>
+          <select
+            id="subject"
+            name="subject"
+            class="w-full px-4 py-3 rounded-xl border border-sand-dark bg-white text-charcoal focus:outline-none focus:border-wine focus:ring-2 focus:ring-wine/10 transition-all duration-300"
+          >
+            <option value="">Bitte wählen...</option>
+            <option value="yoga">Yogakurs</option>
+            <option value="massage">Massage / Ayurveda</option>
+            <option value="buero">Büro-Yoga / BGF</option>
+            <option value="retreat">Reise / Workshop</option>
+            <option value="coaching">1:1 Coaching</option>
+            <option value="other">Sonstiges</option>
+          </select>
+        </div>
+        <div>
+          <label for="message" class="block text-sm font-medium text-dark mb-1.5">Nachricht</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="5"
+            required
+            class="w-full px-4 py-3 rounded-xl border border-sand-dark bg-white text-charcoal placeholder-gray-muted/50 focus:outline-none focus:border-wine focus:ring-2 focus:ring-wine/10 transition-all duration-300 resize-none"
+            placeholder="Deine Nachricht..."
+          ></textarea>
+        </div>
+        <div class="text-center pt-2">
+          <button type="submit" class="btn btn-primary w-full sm:w-auto">
+            Nachricht senden
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
+          </button>
+        </div>
+      </form>
+
+      <!-- Direkt-Kontakt -->
+      <div class="fade-in mt-12 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-gray-muted">
+        <a href="tel:+491715884552" class="flex items-center gap-2 hover:text-wine transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+          0171 588 4552
+        </a>
+        <span class="hidden sm:inline text-sand-dark">|</span>
+        <span class="flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+          Fischbeker Str. 4, 21629 Neu Wulmstorf
+        </span>
+      </div>
+    </div>
+  </div>
+</section>

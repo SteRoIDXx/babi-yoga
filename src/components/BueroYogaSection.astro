@@ -1,0 +1,56 @@
+---
+import SectionHeading from './SectionHeading.astro';
+---
+
+<section id="buero" class="section-padding bg-wine text-white relative overflow-hidden">
+  <!-- Decorative shapes -->
+  <div class="organic-shape w-[500px] h-[500px] bg-white -top-20 -right-40" style="opacity: 0.04;"></div>
+  <div class="organic-shape w-[300px] h-[300px] bg-gold bottom-10 -left-20" style="opacity: 0.06; border-radius: 45% 55% 50% 50% / 50% 45% 55% 50%;"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <SectionHeading
+      label="Für Unternehmen"
+      title="Yoga im Büro"
+      subtitle="Yoga im Büro ist Ihr Erfolgsrezept, um Stress, Schulter-Nacken- und Rückenbeschwerden präventiv zu begegnen."
+      light={true}
+    />
+
+    <div class="max-w-3xl mx-auto">
+      <div class="fade-in space-y-6 text-white/85 text-lg leading-relaxed text-center">
+        <p>
+          Mit Yoga am Arbeitsplatz investieren Sie nicht nur in die Gesundheit und das Wohlbefinden Ihrer Mitarbeiter,
+          sondern profitieren auch von steuerlichen Vorteilen und einer verbesserten Work-Life-Balance,
+          die sich positiv auf die gesamte Unternehmenskultur auswirken.
+        </p>
+        <p>
+          Ob Yoga, Atemtraining, Entspannungs- oder Meditationskurse, Workshops zur Selbstführung
+          oder Impulse für Führungskräfte — statt standardisierter Programme entwickle ich in Absprache
+          mit Ihnen klare, strukturierte Formate, individuell auf Struktur und Kultur Ihres Unternehmens abgestimmt.
+        </p>
+      </div>
+
+      <!-- Benefits -->
+      <div class="fade-in grid sm:grid-cols-3 gap-6 mt-12">
+        <div class="text-center p-6 rounded-xl bg-white/8 backdrop-blur-sm">
+          <div class="text-3xl mb-3">🧘</div>
+          <h4 class="font-heading font-bold text-lg mb-2">Vor Ort oder Online</h4>
+          <p class="text-white/70 text-sm">Flexible Formate, angepasst an Ihren Unternehmensalltag</p>
+        </div>
+        <div class="text-center p-6 rounded-xl bg-white/8 backdrop-blur-sm">
+          <div class="text-3xl mb-3">💰</div>
+          <h4 class="font-heading font-bold text-lg mb-2">Steuerlich absetzbar</h4>
+          <p class="text-white/70 text-sm">Bis zu 600 € pro Mitarbeiter/Jahr steuer- und sozialversicherungsfrei</p>
+        </div>
+        <div class="text-center p-6 rounded-xl bg-white/8 backdrop-blur-sm">
+          <div class="text-3xl mb-3">📋</div>
+          <h4 class="font-heading font-bold text-lg mb-2">Individuell</h4>
+          <p class="text-white/70 text-sm">Maßgeschneiderte Programme statt Standard-Lösungen</p>
+        </div>
+      </div>
+
+      <div class="fade-in text-center mt-10">
+        <a href="#kontakt" class="btn btn-white">Kostenfreie Erstberatung buchen</a>
+      </div>
+    </div>
+  </div>
+</section>

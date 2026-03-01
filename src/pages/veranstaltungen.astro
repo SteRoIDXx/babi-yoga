@@ -1,0 +1,130 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+
+const events = [
+  {
+    date: '29. März 2026',
+    weekday: 'Sonntag',
+    time: '16:00 Uhr',
+    title: 'Offener Mantra-Singkreis',
+    description: 'Entdecke die Kraft des gemeinsamen Singens! Wir singen, tönen und lauschen gemeinsam heilsamen Mantras und Lieder aus aller Welt. Nikola am indischen Harmonium und Ali an den Percussions. Keine musikalischen Vorkenntnisse nötig!',
+    price: 'Kostenbeitrag auf Spendenbasis',
+    quote: 'Es gibt keine falschen Töne.',
+    location: 'Babi-Yoga, Fischbeker Str. 4, Neu Wulmstorf',
+    cta: { label: 'Jetzt anmelden', href: '/kontakt' },
+    highlight: true,
+  },
+  {
+    date: '22. – 25. Mai 2026',
+    weekday: 'Pfingsten',
+    time: 'ab 17:00 Uhr',
+    title: 'Yogaretreat im Wendland',
+    description: 'Hatha Yoga für Anfänger und Fortgeschrittene, Pranayama-Atemübungen und Tiefenentspannung. Ayurvedisch-vegetarische Vollpension inklusive.',
+    location: 'Göhrde im Wendland, Niedersachsen',
+    cta: { label: 'Alle Details zum Retreat', href: '/reisen' },
+    highlight: false,
+  },
+];
+
+const ferienTermine = [
+  '30.03. – 06.04.2026',
+  '30.04. – 01.05.2026',
+  '14.05. – 15.05.2026',
+];
+---
+
+<Layout
+  title="Veranstaltungen — Babi Yoga"
+  description="Workshops, Mantra-Singkreise und Events bei Babi Yoga in Neu Wulmstorf. Aktuelle Termine und Veranstaltungen."
+>
+  <PageHero
+    title="Veranstaltungen"
+    subtitle="Workshops, Singkreise und besondere Events."
+    backgroundImage="/images/yoga-gruppe.webp"
+    imagePosition="center 18%"
+  />
+
+  <!-- Intro -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="fade-in text-charcoal/85 text-lg leading-relaxed">
+        Neben den regulären Yogakursen biete ich regelmäßig besondere Events an —
+        Mantra-Singkreise, Retreats und Workshops. Hier findest du die aktuellen Termine.
+      </p>
+    </div>
+  </section>
+
+  <!-- Events -->
+  <section class="section-padding bg-warm-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 stagger">
+      {events.map((event) => (
+        <div class={`fade-in rounded-2xl overflow-hidden border ${event.highlight ? 'border-wine/15 bg-white shadow-md' : 'border-sand-dark bg-white'}`}>
+          {event.highlight && (
+            <div class="aspect-[16/9] overflow-hidden">
+              <img src="/images/yoga-wochenende-30.webp" alt="Yoga-Session in stimmungsvollem Raum bei Babi Yoga" loading="lazy" decoding="async" class="w-full h-full object-cover object-top" />
+            </div>
+          )}
+          <div class="flex flex-col sm:flex-row">
+            <div class="sm:w-36 p-5 bg-wine/5 flex flex-col items-center justify-center text-center flex-shrink-0">
+              <span class="text-xs font-semibold text-wine uppercase tracking-wider">{event.weekday}</span>
+              <span class="font-heading text-lg font-bold text-dark mt-1">{event.date}</span>
+              <span class="text-sm text-gray-muted mt-1">{event.time}</span>
+            </div>
+            <div class="flex-1 p-5 sm:p-6">
+              <h3 class="font-heading text-xl font-bold text-dark mb-2">{event.title}</h3>
+              <p class="text-charcoal/80 text-sm leading-relaxed mb-3">{event.description}</p>
+              {event.quote && (
+                <p class="text-wine font-heading italic text-sm mb-3">„{event.quote}"</p>
+              )}
+              {event.price && (
+                <p class="text-sm text-charcoal font-medium mb-3">{event.price}</p>
+              )}
+              <div class="flex items-center justify-between flex-wrap gap-3">
+                <div class="flex items-center gap-2 text-xs text-gray-muted">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                  {event.location}
+                </div>
+                {event.cta && (
+                  <a href={event.cta.href} class={`${event.highlight ? 'inline-block px-5 py-2 bg-wine text-white text-sm font-semibold rounded-full hover:bg-magenta transition-colors' : 'text-sm font-semibold text-wine hover:text-magenta transition-colors'}`}>
+                    {event.cta.label}{!event.highlight && ' →'}
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Ferien -->
+  <section class="py-12 bg-cream">
+    <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="fade-in p-6 bg-white rounded-xl border border-sand-dark text-center">
+        <h4 class="font-heading font-bold text-dark mb-3">Ferien & Pausen</h4>
+        <p class="text-sm text-gray-muted mb-4">An gesetzlichen Feiertagen und zu folgenden Terminen pausieren alle Kurse:</p>
+        <div class="flex flex-wrap justify-center gap-2">
+          {ferienTermine.map((termin) => (
+            <span class="px-3 py-1.5 bg-sand rounded-full text-sm text-charcoal font-medium">{termin}</span>
+          ))}
+        </div>
+        <p class="text-xs text-gray-muted mt-4">Du kannst weiterhin mit Aufzeichnungen früherer Klassen üben.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-padding bg-warm-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-4">Dabei sein?</h2>
+      <p class="fade-in text-charcoal/80 text-lg mb-8">
+        Melde dich einfach per Telefon oder Kontaktformular an.
+        Ich freue mich auf dich!
+      </p>
+      <div class="fade-in">
+        <a href="/kontakt" class="btn btn-primary">Jetzt anmelden</a>
+      </div>
+    </div>
+  </section>
+</Layout>

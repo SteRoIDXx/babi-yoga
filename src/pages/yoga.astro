@@ -1,0 +1,189 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+
+const yogaTypes = [
+  {
+    title: 'Hatha Yoga',
+    description: 'Kraftvolle und ruhige Asanas, fließend und statisch, immer im Einklang mit dem Atem. Für mehr Kraft, Selbstvertrauen und Achtsamkeit.',
+    level: 'Alle Level',
+    image: '/images/yoga-gruppe.webp',
+    imageAlt: 'Hatha Yoga Gruppenübung',
+  },
+  {
+    title: 'Yin Yoga',
+    description: 'Sanfter, meditativer Yogastil mit lang gehaltenen Positionen. Löst Verspannungen, beruhigt das Nervensystem und fördert die Flexibilität.',
+    level: 'Alle Level',
+    image: '/images/yoga-studio.webp',
+    imageAlt: 'Yin Yoga — meditative Ruhe und Entspannung im Yogaraum',
+  },
+  {
+    title: 'Kinderyoga',
+    description: 'Spielerisch Yoga entdecken — mit Bewegung, Fantasie, Achtsamkeit und Entspannung. Für Kids (6–9 J.) und Teens (9–12 J.).',
+    level: '6–12 Jahre',
+    image: '/images/kinderyoga.webp',
+    imageAlt: 'Kinder bei einer spielerischen Yoga-Übung',
+  },
+  {
+    title: '1:1 Coaching',
+    description: 'Individuell gestaltete Praxis, abgestimmt auf deine Ziele — ob Rückengesundheit, Stressregulation, Atemtraining oder mehr Beweglichkeit.',
+    level: 'Individuell',
+    image: '/images/yoga-mit-nikola.webp',
+    imageAlt: 'Nikola Babi beim individuellen Yoga-Coaching',
+  },
+];
+
+const schedule = [
+  { day: 'Montag', classes: [
+    { time: '16:30 – 17:15', name: 'Kinderyoga', detail: '6–9 Jahre' },
+    { time: '17:30 – 18:15', name: 'Teens-Yoga', detail: '9–12 Jahre' },
+  ]},
+  { day: 'Dienstag', classes: [
+    { time: '18:00 – 19:30', name: 'Hatha-Yoga', detail: 'Stufe 1–2' },
+    { time: '19:45 – 21:15', name: 'Hatha-Yoga', detail: 'Stufe 2–3' },
+  ]},
+  { day: 'Mittwoch', classes: [
+    { time: '19:00 – 20:30', name: 'Hatha-Yoga', detail: 'Stufe 0–2' },
+  ]},
+  { day: 'Donnerstag', classes: [
+    { time: '18:00 – 19:30', name: 'Yin-Yoga für Frauen', detail: '' },
+    { time: '19:45 – 21:15', name: 'Mantra-Yoga', detail: 'Stufe 2–3' },
+  ]},
+  { day: 'Freitag', classes: [
+    { time: '09:00 – 10:30', name: 'Sanfte Morgenklasse', detail: 'Alle Stufen' },
+  ]},
+];
+---
+
+<Layout
+  title="Yoga — Babi Yoga in Neu Wulmstorf"
+  description="Hatha Yoga, Yin Yoga, Kinderyoga und 1:1 Coaching in Neu Wulmstorf. Präventionskurse mit Krankenkassenzuschuss. Alle Level willkommen."
+>
+  <PageHero
+    title="Yoga für alle"
+    subtitle="Hier bist du willkommen — unabhängig von Alter oder Fitness."
+    backgroundImage="/images/yoga-outdoor.webp"
+    imagePosition="center 20%"
+  />
+
+  <!-- Yoga Philosophy -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <blockquote class="fade-in container-narrow text-center mb-12">
+        „Ein Gramm Praxis ist besser als Tonnen Theorie."
+        <cite>— Swami Sivananda</cite>
+      </blockquote>
+
+      <p class="fade-in text-center text-charcoal/80 text-lg leading-relaxed max-w-2xl mx-auto">
+        Yoga ist keine Frage der Leistung, sondern deines persönlichen Wohlbefindens.
+        Mit dem Fokus auf Hatha Yoga vereine ich verschiedene Traditionen und Stile.
+        Jede Klasse ist wie ein bunter Blumenstrauß voller Vielfalt, Lebendigkeit, Kraft, Ruhe sowie Entspannung.
+      </p>
+    </div>
+  </section>
+
+  <!-- Yoga Types -->
+  <section class="section-padding bg-warm-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="fade-in font-heading font-bold text-dark" style="font-size: var(--text-heading);">Mein Angebot</h2>
+      </div>
+
+      <div class="space-y-16">
+        {yogaTypes.map((type, i) => (
+          <div class={`flex flex-col ${i % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-10 lg:gap-16`}>
+            <div class={`w-full lg:w-1/2 ${i % 2 === 1 ? 'fade-in-right' : 'fade-in-left'}`}>
+              <div class="rounded-2xl overflow-hidden shadow-lg aspect-[4/3]">
+                <img
+                  src={type.image}
+                  alt={type.imageAlt}
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-cover object-top"
+                />
+              </div>
+            </div>
+            <div class={`w-full lg:w-1/2 ${i % 2 === 1 ? 'fade-in-left' : 'fade-in-right'}`}>
+              <span class="inline-block px-3 py-1 text-xs font-semibold text-wine bg-wine/8 rounded-full mb-4">
+                {type.level}
+              </span>
+              <h3 class="font-heading text-2xl font-bold text-dark mb-4">{type.title}</h3>
+              <p class="text-charcoal/80 text-lg leading-relaxed">{type.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Kursplan -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8">
+        <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-2">Wochenplan</h2>
+        <p class="fade-in text-gray-muted">Dein Überblick über alle regelmäßigen Klassen</p>
+      </div>
+
+      <div class="fade-in bg-white rounded-2xl overflow-hidden shadow-sm border border-sand-dark">
+        {schedule.map((day, i) => (
+          <div class={`${i > 0 ? 'border-t border-sand' : ''}`}>
+            <div class="flex flex-col sm:flex-row">
+              <div class="sm:w-36 px-6 py-4 bg-wine/5 flex items-start">
+                <span class="font-heading font-bold text-wine text-lg">{day.day}</span>
+              </div>
+              <div class="flex-1 px-6 py-4">
+                {day.classes.map((cls, j) => (
+                  <div class={`flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 ${j > 0 ? 'mt-3 pt-3 border-t border-sand/60' : ''}`}>
+                    <span class="text-sm font-semibold text-charcoal w-32 flex-shrink-0">{cls.time}</span>
+                    <span class="font-medium text-charcoal">{cls.name}</span>
+                    {cls.detail && <span class="text-sm text-gray-muted">({cls.detail})</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="text-center mt-8">
+        <a href="/kontakt" class="btn btn-primary">Kurs anfragen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Krankenkassenzuschuss -->
+  <section class="py-12 bg-warm-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="fade-in p-6 bg-gold/8 border border-gold/20 rounded-xl">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <h4 class="font-bold text-dark mb-1">Krankenkassenzuschuss</h4>
+            <p class="text-sm text-charcoal/80">
+              Präventionskurse sind nach § 20 SGB V zertifiziert (ZPP) und können von gesetzlichen Krankenkassen bezuschusst werden.
+              Arbeitgeber können Präventionsmaßnahmen mit bis zu 600 € pro Jahr steuerfrei unterstützen (§ 3 Nr. 34 EStG).
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-4">Lust auf Yoga?</h2>
+      <p class="fade-in text-charcoal/80 text-lg mb-8">
+        Ob Einsteiger oder erfahren — melde dich einfach und wir finden den passenden Kurs für dich.
+      </p>
+      <div class="fade-in flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/kontakt" class="btn btn-primary">Kontakt aufnehmen</a>
+        <a href="/reisen" class="btn btn-outline">Yoga-Retreats entdecken</a>
+      </div>
+    </div>
+  </section>
+</Layout>

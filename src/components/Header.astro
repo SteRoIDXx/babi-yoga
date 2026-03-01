@@ -1,0 +1,170 @@
+---
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '/' } = Astro.props;
+
+const navItems = [
+  { label: 'Startseite', href: '/' },
+  { label: 'Yoga', href: '/yoga' },
+  { label: 'Büro-Yoga', href: '/buero-yoga' },
+  { label: 'Ayurveda', href: '/ayurveda' },
+  { label: 'Reisen', href: '/reisen' },
+  { label: 'Veranstaltungen', href: '/veranstaltungen' },
+  { label: 'Mediathek', href: '/mediathek' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Über mich', href: '/ueber-mich' },
+  { label: 'Kontakt', href: '/kontakt' },
+];
+
+function isActive(href: string): boolean {
+  if (href === '/') return currentPath === '/';
+  return currentPath.startsWith(href);
+}
+---
+
+<header id="site-header" class="fixed top-0 left-0 right-0 z-30 transition-all duration-500 bg-warm-white/95 backdrop-blur-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center h-20">
+      <!-- Logo -->
+      <a href="/" class="flex items-center min-h-[44px] shrink-0" aria-label="Zur Startseite">
+        <img
+          src="/images/babi-yoga-logo.png"
+          alt="Babi Yoga — Yoga in Neu Wulmstorf"
+          class="h-12 sm:h-14 w-auto"
+          loading="eager"
+        />
+      </a>
+
+      <!-- Desktop Navigation — centered in available space after logo -->
+      <nav class="hidden xl:flex flex-1 items-center justify-center gap-0.5 pl-8" aria-label="Hauptnavigation">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class={`nav-link px-2.5 py-2 text-[0.8125rem] font-medium tracking-wide transition-colors duration-300 relative min-h-[44px] flex items-center ${
+              isActive(item.href)
+                ? 'text-wine'
+                : 'text-charcoal/80 hover:text-wine'
+            }`}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button
+        id="mobile-menu-btn"
+        class="xl:hidden flex flex-col gap-[5px] p-2 group min-w-[44px] min-h-[44px] items-center justify-center"
+        aria-label="Menü öffnen"
+        aria-expanded="false"
+      >
+        <span class="w-6 h-[2px] bg-charcoal transition-all duration-300 origin-center group-[.active]:rotate-45 group-[.active]:translate-y-[7px]"></span>
+        <span class="w-6 h-[2px] bg-charcoal transition-all duration-300 group-[.active]:opacity-0"></span>
+        <span class="w-6 h-[2px] bg-charcoal transition-all duration-300 origin-center group-[.active]:-rotate-45 group-[.active]:-translate-y-[7px]"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Navigation Overlay -->
+<div id="nav-overlay" class="nav-overlay"></div>
+
+<!-- Mobile Navigation Panel -->
+<nav id="mobile-nav" class="mobile-nav" aria-label="Mobile Navigation">
+  <div class="flex flex-col h-full">
+    <div class="flex justify-end mb-8">
+      <button id="mobile-nav-close" class="p-2 text-charcoal min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Menü schließen">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class={`mobile-nav-link block px-4 py-3 text-lg font-medium rounded-lg transition-all duration-300 min-h-[44px] ${
+            isActive(item.href)
+              ? 'text-wine bg-wine/5'
+              : 'text-charcoal hover:text-wine hover:bg-wine/5'
+          }`}
+          aria-current={isActive(item.href) ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </div>
+
+    <div class="mt-auto pt-8 border-t border-sand-dark">
+      <p class="text-center text-sm text-gray-muted">0171 588 4552</p>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Header scroll behavior
+  const header = document.getElementById('site-header');
+
+  function updateHeader() {
+    const scrollY = window.scrollY;
+    if (scrollY > 20) {
+      header?.classList.add('shadow-sm');
+    } else {
+      header?.classList.remove('shadow-sm');
+    }
+  }
+
+  window.addEventListener('scroll', updateHeader, { passive: true });
+  updateHeader();
+
+  // Mobile menu
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const overlay = document.getElementById('nav-overlay');
+  const mobileNav = document.getElementById('mobile-nav');
+  const closeBtn = document.getElementById('mobile-nav-close');
+
+  function openMenu() {
+    menuBtn?.classList.add('active');
+    overlay?.classList.add('active');
+    mobileNav?.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    menuBtn?.classList.remove('active');
+    overlay?.classList.remove('active');
+    mobileNav?.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  menuBtn?.addEventListener('click', openMenu);
+  overlay?.addEventListener('click', closeMenu);
+  closeBtn?.addEventListener('click', closeMenu);
+
+  // Close on nav link click
+  document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+    link.addEventListener('click', closeMenu);
+  });
+</script>
+
+<style>
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, var(--color-wine), var(--color-gold));
+    transition: all 0.3s var(--ease-out-smooth);
+    transform: translateX(-50%);
+  }
+  .nav-link:hover::after,
+  .nav-link[aria-current="page"]::after {
+    width: 60%;
+  }
+</style>

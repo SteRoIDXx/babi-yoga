@@ -1,0 +1,112 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+const qualifications = [
+  {
+    category: 'Yoga & Körperarbeit',
+    items: ['Hatha Yoga', 'Hormon Yoga', 'Yin Yoga', 'Kinderyoga', 'Klangyoga', 'Mantra Yoga', 'Faszien Training', 'Atemtherapie'],
+  },
+  {
+    category: 'Ayurveda & Gesundheit',
+    items: ['Ayurveda-Therapie', 'Ayurveda-, Marma-Massage', 'Thai-Yoga-Massage', 'Klassische Massage', 'Fußreflexzonenmassage'],
+  },
+  {
+    category: 'Prävention & Energie',
+    items: ['Reiki Grad 1 und 2', 'Übungsleiterin DOSB Prävention B', 'Reha-Sport'],
+  },
+  {
+    category: 'Studium & Weiterbildung',
+    items: ['Gesundheitspsychologie und Medizinpädagogik B. A. (seit 2024)', 'Rituelle Tanzpädagogik (seit 2024)'],
+  },
+];
+
+const certifications = [
+  'E-RYT500 — Yoga Alliance',
+  'ZPP — Zertifizierte Präventionskurse',
+  'Partner der AOK Niedersachsen',
+  'Mitglied im BDY',
+  'Mitglied im BYV',
+];
+---
+
+<section id="uebermich" class="section-padding bg-cream relative overflow-hidden">
+  <div class="organic-shape w-[500px] h-[500px] bg-gold top-10 -left-40" style="opacity: 0.04; border-radius: 50% 50% 40% 60% / 40% 60% 50% 50%;"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <SectionHeading
+      label="Über mich"
+      title="Ich bin Nikola"
+      subtitle="und lebe mit meiner Familie in Neu Wulmstorf."
+    />
+
+    <div class="max-w-4xl mx-auto">
+      <!-- Personal Story -->
+      <div class="fade-in mb-16">
+        <div class="container-narrow space-y-6 text-charcoal/85 leading-relaxed">
+          <p>
+            Seit 2013 gibt es Babi-Yoga — Yoga in Neu Wulmstorf. Alles begann 2005, ganz klassisch
+            mit Rücken. Da saß ich in meiner ersten Yogastunde und die Rückenschmerzen waren wie
+            vom Winde verweht. Meine Yogalehrerin Sylvia Stojanovic — einfach großartig und Yoga
+            phantastisch! Da war es um mich geschehen.
+          </p>
+          <p>
+            Heute unterrichte ich selbst mit Herz und viel Freude Yoga.
+          </p>
+          <p>
+            Mit dem Fokus auf Hatha Yoga vereine ich in meinem Unterricht verschiedene Traditionen
+            und Stile. Jede Klasse ist wie ein bunter Blumenstrauß voller Vielfalt, Lebendigkeit,
+            Kraft, Ruhe sowie Entspannung.
+          </p>
+          <p>
+            Das Om und Mantras sind fester Bestandteil zum Beginn und Ende jeder Yogaklasse.
+            Auf Wunsch der Teilnehmenden gibt es auch spezielle Mantra-Yogastunden und einmal
+            im Monat lade ich zu einem offenen Mantra-Singkreis ein.
+          </p>
+          <p>
+            Neben Gruppen- und Einzeltrainings für Privat- und Firmenkunden biete ich wohltuende
+            Ayurveda-Massagen sowie 1:1 Coaching an — für mehr Lebensqualität, Leichtigkeit und Freude.
+          </p>
+        </div>
+      </div>
+
+      <!-- Qualifications -->
+      <div class="fade-in mb-16">
+        <h3 class="font-heading text-xl font-bold text-dark mb-8 text-center">Qualifikationen</h3>
+        <div class="grid sm:grid-cols-2 gap-6 stagger">
+          {qualifications.map((qual) => (
+            <div class="fade-in bg-white rounded-xl p-6 border border-sand-dark">
+              <h4 class="font-bold text-wine text-sm uppercase tracking-wider mb-4">{qual.category}</h4>
+              <ul class="space-y-2">
+                {qual.items.map((item) => (
+                  <li class="flex items-start gap-2 text-sm text-charcoal/80">
+                    <span class="w-1 h-1 rounded-full bg-gold mt-2 flex-shrink-0"></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Certifications -->
+      <div class="fade-in">
+        <h3 class="font-heading text-xl font-bold text-dark mb-6 text-center">Zertifizierungen & Mitgliedschaften</h3>
+        <div class="flex flex-wrap justify-center gap-3">
+          {certifications.map((cert) => (
+            <span class="px-4 py-2 bg-wine/8 text-wine text-sm font-medium rounded-full">{cert}</span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Beruflicher Hintergrund -->
+      <div class="fade-in mt-12 text-center">
+        <p class="text-sm text-gray-muted italic">
+          In meinem Berufsleben davor war ich: Produktionsassistentin bei Film und Fernsehen
+          (u.a. „Die Rettungsflieger"), Reiseleiterin in der Türkei, kaufmännische Angestellte
+          und Leiterin einer Geschäftsstelle im Sportverein.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

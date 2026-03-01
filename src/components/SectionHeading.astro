@@ -1,0 +1,31 @@
+---
+interface Props {
+  label?: string;
+  title: string;
+  subtitle?: string;
+  align?: 'center' | 'left';
+  light?: boolean;
+}
+
+const { label, title, subtitle, align = 'center', light = false } = Astro.props;
+const alignClass = align === 'center' ? 'text-center mx-auto' : 'text-left';
+---
+
+<div class={`max-w-3xl mb-12 md:mb-16 ${alignClass}`}>
+  {label && (
+    <div class="fade-in mb-4">
+      <span class={`section-label ${light ? 'text-gold' : ''}`}>{label}</span>
+    </div>
+  )}
+  <div class={`fade-in ${align === 'center' ? 'flex justify-center mb-6' : 'mb-6'}`}>
+    <hr class="section-divider" />
+  </div>
+  <h2 class={`fade-in font-heading font-bold ${light ? 'text-white' : 'text-dark'}`} style="font-size: var(--text-section);">
+    {title}
+  </h2>
+  {subtitle && (
+    <p class={`fade-in mt-4 text-lg ${light ? 'text-white/75' : 'text-gray-muted'}`}>
+      {subtitle}
+    </p>
+  )}
+</div>

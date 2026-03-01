@@ -1,0 +1,149 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const formattedDate = post.data.date.toLocaleDateString('de-DE', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<Layout
+  title={`${post.data.title} — Babi Yoga Blog`}
+  description={post.data.excerpt}
+  ogImage={post.data.image}
+>
+  <!-- Article Header -->
+  <section class="pt-28 pb-12 bg-cream">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <a href="/blog" class="inline-flex items-center gap-2 text-wine text-sm font-medium hover:gap-3 transition-all duration-300 mb-8">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5m7-7l-7 7 7 7" /></svg>
+        Zurück zum Blog
+      </a>
+
+      <time datetime={post.data.date.toISOString()} class="text-sm font-medium text-gray-muted uppercase tracking-wider">
+        {formattedDate}
+      </time>
+      <h1 class="font-heading text-3xl sm:text-4xl font-bold text-dark mt-3 mb-6 leading-tight">
+        {post.data.title}
+      </h1>
+    </div>
+  </section>
+
+  {/* Featured Image */}
+  {post.data.image && (
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-4 mb-8">
+      <div class="rounded-2xl overflow-hidden shadow-lg">
+        <img
+          src={post.data.image}
+          alt={post.data.imageAlt || post.data.title}
+          loading="eager"
+          class="w-full aspect-[2/1] object-cover object-top"
+        />
+      </div>
+    </div>
+  )}
+
+  <!-- Article Content -->
+  <article class="pb-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 prose prose-lg">
+      <Content />
+    </div>
+  </article>
+
+  <!-- CTA -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="font-heading text-2xl font-bold text-dark mb-4">Neugierig geworden?</h2>
+      <p class="text-charcoal/80 text-lg mb-8">
+        Melde dich einfach per Telefon oder Kontaktformular — ich freue mich auf dich!
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/kontakt" class="btn btn-primary">Kontakt aufnehmen</a>
+        <a href="/blog" class="btn btn-outline">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5m7-7l-7 7 7 7" /></svg>
+          Alle Beiträge
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  /* Blog content styling */
+  .prose h2 {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-dark);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  .prose h3 {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-dark);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .prose p {
+    color: var(--color-charcoal);
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+  }
+  .prose ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+  }
+  .prose ul li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-charcoal);
+  }
+  .prose ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-wine);
+  }
+  .prose strong {
+    color: var(--color-dark);
+    font-weight: 600;
+  }
+  .prose blockquote {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 1.25rem;
+    color: var(--color-wine);
+    border-left: 3px solid var(--color-gold);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+  }
+  .prose a {
+    color: var(--color-wine);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose a:hover {
+    color: var(--color-wine-dark);
+  }
+</style>

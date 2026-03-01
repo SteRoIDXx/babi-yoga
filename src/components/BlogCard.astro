@@ -1,0 +1,51 @@
+---
+interface Props {
+  title: string;
+  date: Date;
+  excerpt: string;
+  slug: string;
+  image?: string;
+  imageAlt?: string;
+}
+
+const { title, date, excerpt, slug, image, imageAlt } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('de-DE', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<article class="fade-in card group overflow-hidden p-0">
+  {image && (
+    <div class="aspect-[16/9] overflow-hidden">
+      <img
+        src={image}
+        alt={imageAlt || title}
+        loading="lazy"
+        decoding="async"
+        class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+      />
+    </div>
+  )}
+  <div class="p-6">
+    <time datetime={date.toISOString()} class="text-xs font-medium text-gray-muted uppercase tracking-wider">
+      {formattedDate}
+    </time>
+    <h3 class="font-heading text-xl font-bold text-dark mt-2 mb-3 group-hover:text-wine transition-colors duration-300">
+      <a href={`/blog/${slug}`} class="hover:text-wine">
+        {title}
+      </a>
+    </h3>
+    <p class="text-charcoal/70 text-sm leading-relaxed mb-4">
+      {excerpt}
+    </p>
+    <a href={`/blog/${slug}`} class="inline-flex items-center gap-2 text-wine text-sm font-semibold hover:gap-3 transition-all duration-300">
+      Weiterlesen
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M5 12h14m-7-7l7 7-7 7" />
+      </svg>
+    </a>
+  </div>
+</article>

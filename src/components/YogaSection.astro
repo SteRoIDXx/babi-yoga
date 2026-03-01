@@ -1,0 +1,125 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+const yogaTypes = [
+  {
+    title: 'Hatha Yoga',
+    description: 'Kraftvolle und ruhige Asanas, fließend und statisch, immer im Einklang mit dem Atem. Für mehr Kraft, Selbstvertrauen und Achtsamkeit.',
+    level: 'Alle Level',
+    icon: '🌿',
+  },
+  {
+    title: 'Yin Yoga',
+    description: 'Sanfter, meditativer Yogastil mit lang gehaltenen Positionen. Löst Verspannungen, beruhigt das Nervensystem und fördert die Flexibilität.',
+    level: 'Alle Level',
+    icon: '🌙',
+  },
+  {
+    title: 'Kinderyoga',
+    description: 'Spielerisch Yoga entdecken — mit Bewegung, Fantasie, Achtsamkeit und Entspannung. Für Kids (6–9 J.) und Teens (9–12 J.).',
+    level: '6–12 Jahre',
+    icon: '🌈',
+  },
+  {
+    title: '1:1 Coaching',
+    description: 'Individuell gestaltete Praxis, abgestimmt auf deine Ziele — ob Rückengesundheit, Stressregulation, Atemtraining oder mehr Beweglichkeit.',
+    level: 'Individuell',
+    icon: '✨',
+  },
+];
+
+const schedule = [
+  { day: 'Montag', classes: [
+    { time: '16:30 – 17:15', name: 'Kinderyoga', detail: '6–9 Jahre' },
+    { time: '17:30 – 18:15', name: 'Teens-Yoga', detail: '9–12 Jahre' },
+  ]},
+  { day: 'Dienstag', classes: [
+    { time: '18:00 – 19:30', name: 'Hatha-Yoga', detail: 'Stufe 1–2' },
+    { time: '19:45 – 21:15', name: 'Hatha-Yoga', detail: 'Stufe 2–3' },
+  ]},
+  { day: 'Mittwoch', classes: [
+    { time: '19:00 – 20:30', name: 'Hatha-Yoga', detail: 'Stufe 0–2' },
+  ]},
+  { day: 'Donnerstag', classes: [
+    { time: '18:00 – 19:30', name: 'Yin-Yoga für Frauen', detail: '' },
+    { time: '19:45 – 21:15', name: 'Mantra-Yoga', detail: 'Stufe 2–3' },
+  ]},
+  { day: 'Freitag', classes: [
+    { time: '09:00 – 10:30', name: 'Sanfte Morgenklasse', detail: 'Alle Stufen' },
+  ]},
+];
+---
+
+<section id="yoga" class="section-padding bg-cream">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHeading
+      label="Angebot"
+      title="Yoga für alle"
+      subtitle="Hier bist du willkommen — unabhängig von Alter oder Fitness. Yoga ist keine Frage der Leistung, sondern deines persönlichen Wohlbefindens."
+    />
+
+    <blockquote class="fade-in container-narrow mb-16">
+      „Ein Gramm Praxis ist besser als Tonnen Theorie."
+      <cite>— Swami Sivananda</cite>
+    </blockquote>
+
+    <!-- Yoga Types Grid -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20 stagger">
+      {yogaTypes.map((type) => (
+        <div class="card fade-in text-center">
+          <div class="text-3xl mb-4">{type.icon}</div>
+          <h3 class="text-xl font-bold mb-2">{type.title}</h3>
+          <p class="text-gray-muted text-sm leading-relaxed mb-4">{type.description}</p>
+          <span class="inline-block px-3 py-1 text-xs font-semibold text-wine bg-wine/8 rounded-full">
+            {type.level}
+          </span>
+        </div>
+      ))}
+    </div>
+
+    <!-- Kursplan -->
+    <div class="fade-in max-w-4xl mx-auto">
+      <h3 class="text-center font-heading text-2xl font-bold text-dark mb-2">Wochenplan</h3>
+      <p class="text-center text-gray-muted mb-8">Dein Überblick über alle regelmäßigen Klassen</p>
+
+      <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-sand-dark">
+        {schedule.map((day, i) => (
+          <div class={`${i > 0 ? 'border-t border-sand' : ''}`}>
+            <div class="flex flex-col sm:flex-row">
+              <div class="sm:w-36 px-6 py-4 bg-wine/5 flex items-start">
+                <span class="font-heading font-bold text-wine text-lg">{day.day}</span>
+              </div>
+              <div class="flex-1 px-6 py-4">
+                {day.classes.map((cls, j) => (
+                  <div class={`flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 ${j > 0 ? 'mt-3 pt-3 border-t border-sand/60' : ''}`}>
+                    <span class="text-sm font-semibold text-charcoal w-32 flex-shrink-0">{cls.time}</span>
+                    <span class="font-medium text-charcoal">{cls.name}</span>
+                    {cls.detail && <span class="text-sm text-gray-muted">({cls.detail})</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="text-center mt-8">
+        <a href="#kontakt" class="btn btn-primary">Jetzt buchen</a>
+      </div>
+    </div>
+
+    <!-- Krankenkassenzuschuss Hinweis -->
+    <div class="fade-in max-w-3xl mx-auto mt-16 p-6 bg-gold/8 border border-gold/20 rounded-xl">
+      <div class="flex items-start gap-4">
+        <span class="text-2xl flex-shrink-0">💡</span>
+        <div>
+          <h4 class="font-bold text-dark mb-1">Krankenkassenzuschuss</h4>
+          <p class="text-sm text-charcoal/80">
+            Präventionskurse sind nach § 20 SGB V zertifiziert (ZPP) und können von gesetzlichen Krankenkassen bezuschusst werden.
+            Arbeitgeber können Präventionsmaßnahmen mit bis zu 600 € pro Jahr steuerfrei unterstützen (§ 3 Nr. 34 EStG).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

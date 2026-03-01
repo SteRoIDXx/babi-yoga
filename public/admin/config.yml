@@ -1,0 +1,96 @@
+# ─────────────────────────────────────────────
+# Decap CMS Konfiguration — Babi Yoga
+# ─────────────────────────────────────────────
+# Backend: GitHub (mit PKCE — kein Server-Proxy nötig)
+#
+# Für Produktion auf dem Hetzner VPS:
+# 1. GitHub OAuth App erstellen: github.com/settings/developers
+#    → Homepage URL: https://babi-yoga.com
+#    → Callback URL: https://babi-yoga.com/admin/
+# 2. Die app_id unten mit der Client ID der OAuth App ersetzen
+#
+# CMS ist dann erreichbar unter: https://babi-yoga.com/admin/
+# ─────────────────────────────────────────────
+
+backend:
+  name: github
+  repo: SteRoIDXx/babi-yoga
+  branch: main
+  auth_type: pkce
+  # app_id: DEINE_GITHUB_OAUTH_CLIENT_ID
+  # ↑ Wird erst für Produktion gebraucht.
+  #   Lokal funktioniert alles über den Proxy (npm run cms:dev).
+
+# Lokale Entwicklung: npm run cms:dev
+# (Erlaubt CMS-Zugriff ohne Authentifizierung)
+local_backend: true
+
+# Medien-Einstellungen
+media_folder: "public/images"
+public_folder: "/images"
+
+# Sprache
+locale: "de"
+
+# Slug-Konfiguration
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "-"
+
+# ─── Collections ─────────────────────────────
+collections:
+
+  # ─── Blog ──────────────────────────────────
+  - name: "blog"
+    label: "Blog"
+    label_singular: "Blog-Beitrag"
+    folder: "src/content/blog"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    sortable_fields:
+      fields: ["date", "title"]
+      default:
+        field: "date"
+        direction: "Descending"
+    summary: "{{title}} — {{date}}"
+    fields:
+      - label: "Titel"
+        name: "title"
+        widget: "string"
+        hint: "Der Titel des Blog-Beitrags"
+
+      - label: "Datum"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+        date_format: "DD.MM.YYYY"
+        time_format: false
+        hint: "Veröffentlichungsdatum"
+
+      - label: "Kurzbeschreibung"
+        name: "excerpt"
+        widget: "text"
+        hint: "Kurze Zusammenfassung für die Blog-Übersicht (1–2 Sätze)"
+
+      - label: "Beitragsbild"
+        name: "image"
+        widget: "image"
+        required: false
+        hint: "Bild für die Vorschau und den Artikel-Header"
+        media_folder: "/public/images"
+        public_folder: "/images"
+
+      - label: "Bild-Beschreibung (Alt-Text)"
+        name: "imageAlt"
+        widget: "string"
+        required: false
+        hint: "Beschreibung des Bildes für Barrierefreiheit"
+
+      - label: "Inhalt"
+        name: "body"
+        widget: "markdown"
+        hint: "Der Artikel-Text. Nutze Überschriften (##, ###), Listen und Fettschrift."

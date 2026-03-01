@@ -1,0 +1,159 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Ticker from '../components/Ticker.astro';
+import SectionTeaser from '../components/SectionTeaser.astro';
+import BlogCard from '../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+
+const recentPosts = (await getCollection('blog'))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3);
+---
+
+<Layout>
+  <Hero />
+  <Ticker />
+
+  <!-- Yoga Teaser -->
+  <SectionTeaser
+    title="Yoga für alle"
+    subtitle="Angebot"
+    description="Hatha Yoga, Yin Yoga, Kinderyoga und 1:1 Coaching — hier bist du willkommen, unabhängig von Alter oder Fitness. Yoga ist keine Frage der Leistung, sondern deines persönlichen Wohlbefindens."
+    image="/images/nikola-portrait.webp"
+    imageAlt="Yoga-Gruppenübung bei Babi Yoga"
+    href="/yoga"
+    bgClass="bg-cream"
+  />
+
+  <!-- Büro-Yoga Teaser -->
+  <SectionTeaser
+    title="Yoga im Büro"
+    subtitle="Für Unternehmen"
+    description="Yoga am Arbeitsplatz als Erfolgsrezept gegen Stress und Rückenbeschwerden. Maßgeschneiderte Programme statt Standard-Lösungen — steuerlich absetzbar bis 600 € pro Mitarbeiter."
+    image="/images/buero-yoga.webp"
+    imageAlt="Meditation und Achtsamkeitsübung am Arbeitsplatz"
+    href="/buero-yoga"
+    reversed={true}
+    bgClass="bg-warm-white"
+  />
+
+  <!-- Ayurveda Teaser -->
+  <SectionTeaser
+    title="Ayurveda & Massagen"
+    subtitle="Ganzheitliche Begleitung"
+    description="Ganzheitliche Begleitung für Körper, Geist und Wohlbefinden. Von der ayurvedischen Ernährungsberatung bis zur Abhyanga-Ganzkörpermassage — individuell auf dich abgestimmt."
+    image="/images/beratung.webp"
+    imageAlt="Ayurvedische Beratung und ganzheitliche Begleitung"
+    href="/ayurveda"
+    bgClass="bg-cream"
+  />
+
+  <!-- Reisen Teaser -->
+  <SectionTeaser
+    title="Reisen & Retreats"
+    subtitle="Auszeit vom Alltag"
+    description="Yoga und Ayurveda besser kennenlernen und tiefer in die Praxis eintauchen. Mehrtägige Retreats an kraftvollen Orten mit Vollpension und persönlicher Betreuung."
+    image="/images/retreat-natur.webp"
+    imageAlt="Naturlandschaft am Retreat-Ort"
+    href="/reisen"
+    reversed={true}
+    bgClass="bg-warm-white"
+  />
+
+  <!-- Veranstaltungen Teaser -->
+  <SectionTeaser
+    title="Veranstaltungen"
+    subtitle="Termine & Events"
+    description="Workshops, Mantra-Singkreise und besondere Events außerhalb des regulären Kursplans. Entdecke die Kraft des gemeinsamen Singens und Übens."
+    image="/images/yoga-retreat-gruppe.webp"
+    imageAlt="Yoga-Gruppenübung bei einer Babi Yoga Veranstaltung"
+    href="/veranstaltungen"
+    bgClass="bg-cream"
+  />
+
+  <!-- Mediathek Teaser -->
+  <SectionTeaser
+    title="Mediathek"
+    subtitle="Videos & Podcast"
+    description="Kostenfreie Probestunde, Yoga-Videos und mein Podcast mit Inspirationen, Yoga-Wissen und Geschichten aus meiner Praxis. Plus: Der 24-Wochen Online-Yogakurs."
+    image="/images/podcast-cover.webp"
+    imageAlt="Cover des Babi Yoga Meditationspodcast"
+    href="/mediathek"
+    reversed={true}
+    bgClass="bg-warm-white"
+  />
+
+  <!-- Blog Teaser -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <div class="fade-in mb-4">
+          <span class="section-label">Neuigkeiten</span>
+        </div>
+        <div class="fade-in flex justify-center mb-6">
+          <hr class="section-divider" />
+        </div>
+        <h2 class="fade-in font-heading font-bold text-dark" style="font-size: var(--text-section);">
+          Blog
+        </h2>
+        <p class="fade-in text-gray-muted text-lg mt-4">
+          Aktuelles aus der Welt von Babi Yoga — Kurse, Events und Inspirationen.
+        </p>
+      </div>
+
+      {recentPosts.length > 0 && (
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 stagger mb-10">
+          {recentPosts.map((post) => (
+            <BlogCard
+              title={post.data.title}
+              date={post.data.date}
+              excerpt={post.data.excerpt}
+              slug={post.id}
+              image={post.data.image}
+              imageAlt={post.data.imageAlt}
+            />
+          ))}
+        </div>
+      )}
+
+      <div class="fade-in text-center">
+        <a href="/blog" class="btn btn-outline">
+          Alle Beiträge lesen
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" /></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Über mich Teaser -->
+  <SectionTeaser
+    title="Ich bin Nikola"
+    subtitle="Über mich"
+    description="Seit 2013 unterrichte ich mit Herz und viel Freude Yoga in Neu Wulmstorf. Mit dem Fokus auf Hatha Yoga vereine ich verschiedene Traditionen und Stile. Jede Klasse ist wie ein bunter Blumenstrauß."
+    image="/images/nikola-personal-1.webp"
+    imageAlt="Nikola Babi, Yogalehrerin und Ayurveda-Beraterin"
+    href="/ueber-mich"
+    cta="Mehr über mich"
+    bgClass="bg-warm-white"
+  />
+
+  <!-- Kontakt CTA -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-4">Neugierig geworden?</h2>
+      <p class="fade-in text-charcoal/80 text-lg mb-3">
+        Ob Yogakurs, Massage, Coaching oder Retreat — melde dich einfach und wir finden das Richtige für dich.
+      </p>
+      <p class="fade-in text-sm text-gray-muted mb-8">
+        <a href="tel:+491715884552" class="hover:text-wine transition-colors">0171 588 4552</a>
+        <span class="mx-2">·</span>
+        <a href="mailto:info@babi-yoga.com" class="hover:text-wine transition-colors">info@babi-yoga.com</a>
+      </p>
+      <div class="fade-in flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/kontakt" class="btn btn-primary">Kontakt aufnehmen</a>
+        <a href="/yoga" class="btn btn-outline">Kursangebot ansehen</a>
+      </div>
+    </div>
+  </section>
+</Layout>

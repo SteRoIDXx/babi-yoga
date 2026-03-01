@@ -1,0 +1,266 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+
+const qualifications = [
+  {
+    category: 'Yoga & Körperarbeit',
+    items: ['Hatha Yoga', 'Hormon Yoga', 'Yin Yoga', 'Kinderyoga', 'Klangyoga', 'Mantra Yoga', 'Faszien Training', 'Atemtherapie'],
+  },
+  {
+    category: 'Ayurveda & Gesundheit',
+    items: ['Ayurveda-Therapie', 'Ayurveda-, Marma-Massage', 'Thai-Yoga-Massage', 'Klassische Massage', 'Fußreflexzonenmassage'],
+  },
+  {
+    category: 'Prävention & Energie',
+    items: ['Reiki Grad 1 und 2', 'Übungsleiterin DOSB Prävention B', 'Reha-Sport'],
+  },
+  {
+    category: 'Studium & Weiterbildung',
+    items: ['Gesundheitspsychologie und Medizinpädagogik B. A. (seit 2024)', 'Rituelle Tanzpädagogik (seit 2024)'],
+  },
+];
+
+const certBadges = [
+  {
+    image: '/images/business-yoga.webp',
+    label: 'Business-Yoga',
+    href: 'https://business-meets-yoga.de',
+  },
+  {
+    image: '/images/eryt500.png',
+    label: 'Yoga Alliance zertifiziert',
+    href: 'https://www.yogaalliance.org',
+  },
+  {
+    image: '/images/zpp-zertifikat.webp',
+    label: 'Zertifizierte Präventionskurse nach § 20 SGB V',
+    href: 'https://www.zentrale-pruefstelle-praevention.de',
+  },
+  {
+    image: '/images/aok-partner-badge.png',
+    label: 'Partner der AOK Niedersachsen',
+    href: 'https://www.aok.de/pk/niedersachsen/landingpages/gesundheitsangebote/',
+  },
+  {
+    image: '/images/provenexpert.png',
+    label: 'Kundenstimmen',
+    href: 'https://www.provenexpert.com/babi-yoga/',
+  },
+  {
+    image: '/images/rising-health.webp',
+    label: 'Rising Health — Gesunde Unternehmen',
+    href: 'https://www.risinghealth.de/nikola-babi',
+  },
+];
+
+const certLogos = [
+  {
+    image: '/images/fg-gesundheit.png',
+    label: 'Gesundheitsexpertin Freie Berufe',
+    href: 'https://freie-gesundheitsberufe.de/gesundheitsexperten/experteneintrag/1416.html',
+  },
+  {
+    image: '/images/bdyoga-logo.svg',
+    label: 'Mitglied im Bund Deutscher Yogalehrer',
+    href: 'https://www.yoga.de/profil/nikola-babi_neu-wulmstorf',
+  },
+  {
+    image: '/images/yoga-vidya-logo.png',
+    label: 'Mitglied im Berufsverband Yoga Vidya',
+    href: 'https://www.yoga-vidya.de/netzwerk/berufsverbaende/byv/yogalehrerverzeichnis/',
+  },
+  {
+    image: '/images/machtfit.png',
+    label: 'machtfit — Moderne Gesundheitsförderung',
+    href: 'https://www.machtfit.de/digitale-gesundheit/',
+  },
+  {
+    image: '/images/kooperationen.webp',
+    label: 'Kooperationen',
+    href: null,
+  },
+];
+---
+
+<Layout
+  title="Über mich — Nikola Babi | Babi Yoga"
+  description="Yogalehrerin, Ayurveda-Beraterin und Massagetherapeutin seit 2013 in Neu Wulmstorf. E-RYT500, zertifizierte Präventionskurse und Partner der AOK."
+>
+  <PageHero
+    title="Ich bin Nikola"
+    subtitle="und lebe mit meiner Familie in Neu Wulmstorf."
+    backgroundImage="/images/yoga-mit-nikola.webp"
+    imagePosition="center 40%"
+    minHeight="65vh"
+  />
+
+  <!-- Personal Story -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-5 gap-12 items-start">
+        <div class="lg:col-span-3 fade-in-left">
+          <div class="space-y-6 text-charcoal/85 leading-relaxed">
+            <p>
+              Seit 2013 gibt es Babi-Yoga — Yoga in Neu Wulmstorf. Alles begann 2005, ganz klassisch
+              mit Rücken. Da saß ich in meiner ersten Yogastunde und die Rückenschmerzen waren wie
+              vom Winde verweht. Meine Yogalehrerin Sylvia Stojanovic — einfach großartig und Yoga
+              phantastisch! Da war es um mich geschehen.
+            </p>
+            <p>
+              Heute unterrichte ich selbst mit Herz und viel Freude Yoga.
+            </p>
+            <p>
+              Mit dem Fokus auf Hatha Yoga vereine ich in meinem Unterricht verschiedene Traditionen
+              und Stile. Jede Klasse ist wie ein bunter Blumenstrauß voller Vielfalt, Lebendigkeit,
+              Kraft, Ruhe sowie Entspannung.
+            </p>
+            <p>
+              Das Om und Mantras sind fester Bestandteil zum Beginn und Ende jeder Yogaklasse.
+              Auf Wunsch der Teilnehmenden gibt es auch spezielle Mantra-Yogastunden und einmal
+              im Monat lade ich zu einem offenen Mantra-Singkreis ein.
+            </p>
+            <p>
+              Neben Gruppen- und Einzeltrainings für Privat- und Firmenkunden biete ich wohltuende
+              Ayurveda-Massagen sowie 1:1 Coaching an — für mehr Lebensqualität, Leichtigkeit und Freude.
+            </p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2 fade-in-right">
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img
+              src="/images/nikola-personal-2.webp"
+              alt="Nikola Babi — Yogalehrerin in Neu Wulmstorf"
+              loading="lazy"
+              decoding="async"
+              class="w-full h-auto"
+            />
+          </div>
+          <div class="mt-6 rounded-2xl overflow-hidden shadow-lg">
+            <img
+              src="/images/nikola-teaching.webp"
+              alt="Nikola Babi beim Unterrichten einer Yogaklasse"
+              loading="lazy"
+              decoding="async"
+              class="w-full h-auto"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qualifications -->
+  <section class="section-padding bg-warm-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-8 text-center">Qualifikationen</h2>
+      <div class="grid sm:grid-cols-2 gap-6 stagger">
+        {qualifications.map((qual) => (
+          <div class="fade-in bg-white rounded-xl p-6 border border-sand-dark">
+            <h4 class="font-bold text-wine text-sm uppercase tracking-wider mb-4">{qual.category}</h4>
+            <ul class="space-y-2">
+              {qual.items.map((item) => (
+                <li class="flex items-start gap-2 text-sm text-charcoal/80">
+                  <span class="w-1 h-1 rounded-full bg-gold mt-2 flex-shrink-0"></span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Zertifizierungen & Partner -->
+  <section class="py-16 bg-cream">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h3 class="fade-in font-heading text-2xl font-bold text-dark mb-10 text-center">Zertifizierungen & Partner</h3>
+
+      <!-- Certification Badges — kreisrunde Badges -->
+      <div class="fade-in flex flex-wrap items-start justify-center gap-6 sm:gap-8 mb-12">
+        {certBadges.map((badge) => {
+          const inner = (
+            <div class="flex flex-col items-center gap-3 group">
+              <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-wine/20 group-hover:border-wine/50 transition-all duration-300 shadow-md group-hover:shadow-lg bg-white flex items-center justify-center p-1">
+                <img
+                  src={badge.image}
+                  alt={badge.label}
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-cover rounded-full"
+                />
+              </div>
+              <span class="text-xs text-center text-charcoal/70 group-hover:text-wine transition-colors duration-300 max-w-[110px] leading-tight font-medium">
+                {badge.label}
+              </span>
+            </div>
+          );
+          return badge.href ? (
+            <a href={badge.href} target="_blank" rel="noopener noreferrer" class="no-underline">
+              {inner}
+            </a>
+          ) : (
+            <div>{inner}</div>
+          );
+        })}
+      </div>
+
+      <!-- Divider -->
+      <div class="flex items-center justify-center gap-4 mb-12">
+        <div class="h-px w-16 bg-wine/15"></div>
+        <span class="text-xs font-semibold uppercase tracking-[0.2em] text-wine/40">Mitgliedschaften & Kooperationen</span>
+        <div class="h-px w-16 bg-wine/15"></div>
+      </div>
+
+      <!-- Partner-Logos — rechteckige Logos -->
+      <div class="fade-in flex flex-wrap items-center justify-center gap-8 sm:gap-10">
+        {certLogos.map((logo) => {
+          const logoImg = (
+            <div class="flex flex-col items-center gap-2 group">
+              <div class="h-12 sm:h-14 flex items-center justify-center">
+                <img
+                  src={logo.image}
+                  alt={logo.label}
+                  loading="lazy"
+                  decoding="async"
+                  style="height: 48px; width: auto; max-width: 140px;"
+                  class="object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                />
+              </div>
+              <span class="text-[0.65rem] text-center text-charcoal/50 group-hover:text-charcoal/80 transition-colors duration-300 max-w-[120px] leading-tight">
+                {logo.label}
+              </span>
+            </div>
+          );
+          return logo.href ? (
+            <a href={logo.href} target="_blank" rel="noopener noreferrer" class="no-underline">
+              {logoImg}
+            </a>
+          ) : (
+            <div>{logoImg}</div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-padding bg-warm-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-4">Lass uns zusammen Yoga machen</h2>
+      <p class="fade-in text-charcoal/80 text-lg mb-3">
+        Ob Yogakurs, Massage, Coaching oder Retreat — melde dich einfach und wir finden das Richtige für dich.
+      </p>
+      <p class="fade-in text-sm text-gray-muted italic mb-8">
+        Übrigens: In meinem Berufsleben davor war ich Produktionsassistentin bei Film und Fernsehen,
+        Reiseleiterin in der Türkei und Leiterin einer Geschäftsstelle im Sportverein.
+      </p>
+      <div class="fade-in flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/kontakt" class="btn btn-primary">Kontakt aufnehmen</a>
+        <a href="/yoga" class="btn btn-outline">Kursangebot ansehen</a>
+      </div>
+    </div>
+  </section>
+</Layout>

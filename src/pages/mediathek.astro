@@ -1,0 +1,160 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+---
+
+<Layout
+  title="Mediathek — Videos & Podcast | Babi Yoga"
+  description="Kostenfreie Yoga-Probestunde, Podcast und der 24-Wochen Online-Yogakurs. Videos und Inspirationen von Nikola Babi."
+>
+  <PageHero
+    title="Mediathek"
+    subtitle="Kostenfreie Probestunde, Yoga-Videos und mein Podcast."
+    backgroundImage="/images/sonnengruesse.webp"
+    imagePosition="center 10%"
+  />
+
+  <!-- Video + Podcast -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Probestunde Video (DSGVO 2-Klick) -->
+        <div class="fade-in-left">
+          <div class="bg-white rounded-2xl overflow-hidden border border-sand-dark shadow-sm">
+            <div
+              id="youtube-consent"
+              class="aspect-video overflow-hidden relative group cursor-pointer"
+              data-video-id="pQcN1xeVZoo"
+              role="button"
+              tabindex="0"
+              aria-label="YouTube-Video laden und abspielen"
+            >
+              <img
+                src="/images/video-thumbnail.webp"
+                alt="Vorschaubild der kostenfreien Yoga-Probestunde"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-night/30 to-transparent"></div>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="w-16 h-16 rounded-full bg-wine/90 flex items-center justify-center group-hover:bg-wine transition-colors duration-300 group-hover:scale-110 transform">
+                  <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              </div>
+              <p class="absolute bottom-3 left-0 right-0 text-center text-white text-xs font-medium z-10">
+                Klicken, um das YouTube-Video zu laden
+              </p>
+            </div>
+            <div class="p-5">
+              <h3 class="font-heading text-lg font-bold text-dark mb-1">Kostenfreie Probestunde</h3>
+              <p class="text-sm text-gray-muted">Probiere Yoga bequem von zu Hause aus</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Podcast -->
+        <div class="fade-in-right">
+          <div class="bg-white rounded-2xl overflow-hidden border border-sand-dark shadow-sm h-full flex flex-col">
+            <div class="aspect-video overflow-hidden">
+              <img
+                src="/images/podcast-cover.webp"
+                alt="Cover des Babi Yoga Meditationspodcast"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div class="p-5 flex-1 flex flex-col">
+              <h3 class="font-heading text-lg font-bold text-dark mb-1">Mein Podcast</h3>
+              <p class="text-sm text-gray-muted mb-4">Inspirationen, Yoga-Wissen und Geschichten aus meiner Praxis</p>
+              <div class="mt-auto flex flex-wrap gap-3">
+                <a href="https://open.spotify.com/show/4r3O0k9s4U5882I7HMy3yP?si=Iqr-spT5QFaBlq6y2bjqaQ" target="_blank" rel="noopener noreferrer" class="btn btn-outline text-sm px-5 py-2 min-h-[44px]">
+                  Spotify
+                </a>
+                <a href="https://podcasts.apple.com/de/podcast/babi-yoga-fm/id1550976973" target="_blank" rel="noopener noreferrer" class="btn btn-outline text-sm px-5 py-2 min-h-[44px]">
+                  Apple Podcasts
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 24 Wochen Yoga Kurs -->
+  <section class="section-padding bg-warm-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="fade-in bg-gradient-to-r from-wine/5 to-gold/5 rounded-2xl p-6 sm:p-8 border border-wine/10">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+          <div class="flex-1">
+            <span class="inline-block px-3 py-1 bg-gold/20 text-charcoal text-xs font-bold rounded-full mb-3">Online-Kurs</span>
+            <h3 class="font-heading text-2xl font-bold text-dark mb-2">24 Wochen Yoga</h3>
+            <p class="text-charcoal/80 mb-3">
+              23 abwechslungsreiche Yoga-Übungsvideos zum Üben nach deinem eigenen Zeitplan.
+              Übe wann und wo es dir am besten passt!
+            </p>
+            <div class="flex items-baseline gap-3">
+              <span class="font-heading text-2xl font-bold text-wine">199 €</span>
+              <span class="text-sm text-gray-muted line-through">368 €</span>
+              <span class="text-xs font-medium text-white bg-wine rounded-full px-2 py-0.5">-46%</span>
+            </div>
+            <p class="text-xs text-gray-muted mt-1">inkl. MwSt. · Abo-Inhaber: 69 €</p>
+          </div>
+          <div class="flex-shrink-0">
+            <a href="/kontakt" class="btn btn-primary min-h-[44px]">Jetzt teilnehmen</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- YouTube 2-Klick-Lösung -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const consent = document.getElementById('youtube-consent');
+      if (!consent) return;
+
+      function loadVideo() {
+        const videoId = consent.dataset.videoId;
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
+        iframe.allow = 'autoplay; encrypted-media';
+        iframe.allowFullscreen = true;
+        iframe.classList.add('absolute', 'inset-0', 'w-full', 'h-full');
+        iframe.style.border = 'none';
+        consent.innerHTML = '';
+        consent.classList.remove('cursor-pointer');
+        consent.removeAttribute('role');
+        consent.removeAttribute('tabindex');
+        consent.appendChild(iframe);
+      }
+
+      consent.addEventListener('click', loadVideo);
+      consent.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          loadVideo();
+        }
+      });
+    });
+  </script>
+
+  <!-- CTA -->
+  <section class="section-padding bg-cream">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-4">Neugierig geworden?</h2>
+      <p class="fade-in text-charcoal/80 text-lg mb-8">
+        Probiere Yoga einfach aus — mit der kostenfreien Probestunde oder melde dich
+        direkt für den Online-Kurs an.
+      </p>
+      <div class="fade-in flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/kontakt" class="btn btn-primary">Kontakt aufnehmen</a>
+        <a href="/yoga" class="btn btn-outline">Kursangebot ansehen</a>
+      </div>
+    </div>
+  </section>
+</Layout>

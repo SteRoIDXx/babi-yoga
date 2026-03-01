@@ -1,0 +1,59 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHero from '../../components/PageHero.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+---
+
+<Layout
+  title="Blog — Babi Yoga"
+  description="Neuigkeiten, Termine und Inspirationen rund um Yoga, Ayurveda und Achtsamkeit bei Babi Yoga in Neu Wulmstorf."
+>
+  <PageHero
+    title="Blog"
+    subtitle="Neuigkeiten, Termine und Inspirationen."
+    backgroundImage="/images/blog-banner.webp"
+    imagePosition="center 40%"
+  />
+
+  <section class="section-padding bg-cream">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 stagger">
+        {posts.map((post) => (
+          <BlogCard
+            title={post.data.title}
+            date={post.data.date}
+            excerpt={post.data.excerpt}
+            slug={post.id}
+            image={post.data.image}
+            imageAlt={post.data.imageAlt}
+          />
+        ))}
+      </div>
+
+      {posts.length === 0 && (
+        <div class="text-center py-12">
+          <p class="text-gray-muted text-lg">Noch keine Beiträge vorhanden.</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-padding bg-warm-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-4">Yoga ausprobieren?</h2>
+      <p class="fade-in text-charcoal/80 text-lg mb-8">
+        Ob Yogakurs, Retreat oder Ayurveda — melde dich einfach und wir finden das Richtige für dich.
+      </p>
+      <div class="fade-in flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/kontakt" class="btn btn-primary">Kontakt aufnehmen</a>
+        <a href="/yoga" class="btn btn-outline">Kursangebot ansehen</a>
+      </div>
+    </div>
+  </section>
+</Layout>

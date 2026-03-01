@@ -1,0 +1,56 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  backgroundImage?: string;
+  imagePosition?: string;
+  /** Override default hero height, e.g. '65vh' — useful when the image needs more vertical space */
+  minHeight?: string;
+}
+
+const { title, subtitle, backgroundImage, imagePosition = 'center', minHeight } = Astro.props;
+---
+
+<section
+  class:list={[
+    'relative overflow-hidden flex items-end',
+    backgroundImage && !minHeight && 'min-h-[50vh] sm:min-h-[55vh]',
+    !backgroundImage && 'py-28 sm:py-36',
+  ]}
+  style={minHeight ? `min-height: ${minHeight};` : undefined}
+>
+  {/* Background image with overlay */}
+  {backgroundImage ? (
+    <>
+      <img
+        src={backgroundImage}
+        alt=""
+        role="presentation"
+        loading="eager"
+        class="absolute inset-0 w-full h-full object-cover"
+        style={`object-position: ${imagePosition};`}
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-night/85 via-night/50 to-night/25"></div>
+    </>
+  ) : (
+    <div class="absolute inset-0 bg-gradient-to-br from-wine via-magenta to-wine-dark flex items-center justify-center"></div>
+  )}
+
+  {/* Decorative organic shape */}
+  <div class="organic-shape w-[400px] h-[400px] bg-white -top-20 -right-20" style="opacity: 0.06;"></div>
+
+  <div class:list={[
+    'relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6',
+    backgroundImage ? 'pb-10 sm:pb-14 text-left sm:text-left' : 'text-center py-0',
+    !backgroundImage && 'flex flex-col items-center justify-center min-h-[200px]',
+  ]}>
+    <h1 class="fade-in font-heading font-bold text-white leading-tight mb-3" style={`font-size: var(--text-section); ${backgroundImage ? 'text-shadow: 0 2px 12px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3);' : ''}`}>
+      {title}
+    </h1>
+    {subtitle && (
+      <p class="fade-in text-white/85 text-lg sm:text-xl max-w-2xl" style={backgroundImage ? 'text-shadow: 0 1px 8px rgba(0,0,0,0.4);' : ''}>
+        {subtitle}
+      </p>
+    )}
+  </div>
+</section>
