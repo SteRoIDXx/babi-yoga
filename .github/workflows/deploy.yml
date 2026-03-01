@@ -49,10 +49,15 @@ jobs:
                   c2 = c
 
                   if ext == 'html':
-                      # Fix href, src, content attributes: /path → /babi-yoga/path
+                      # Fix href, src, srcset, content attributes: /path → /babi-yoga/path
                       # Skip: protocol-relative // and already-prefixed paths
                       c2 = re.sub(
-                          r'((?:href|src|content|action)=")(/(?!/|babi-yoga/))',
+                          r'((?:href|src|srcset|content|action)=")(/(?!/|babi-yoga/))',
+                          r'\1' + BASE + r'\2', c2
+                      )
+                      # Fix srcset values: each comma-separated entry starting with /
+                      c2 = re.sub(
+                          r'(,\s*)(/(?!/|babi-yoga/))',
                           r'\1' + BASE + r'\2', c2
                       )
                       # Fix inline CSS url() in HTML
