@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Seite nicht gefunden — Babi Yoga"
+  description="Die gesuchte Seite konnte leider nicht gefunden werden."
+>
+  <section class="pt-28 pb-20 bg-cream min-h-[60vh] flex items-center">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="font-heading text-8xl font-bold text-wine/15 select-none" aria-hidden="true">404</span>
+      <h1 class="font-heading text-3xl font-bold text-dark mt-4 mb-4">Seite nicht gefunden</h1>
+      <p class="text-charcoal/80 text-lg mb-8 leading-relaxed">
+        Ohm… diese Seite scheint in tiefer Meditation versunken zu sein.
+        Vielleicht findest du, was du suchst, über die Navigation oder die Startseite.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/" class="btn btn-primary">Zur Startseite</a>
+        <a href="/kontakt" class="btn btn-outline">Kontakt aufnehmen</a>
+      </div>
+    </div>
+  </section>
+</Layout>

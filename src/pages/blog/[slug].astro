@@ -18,6 +18,32 @@ const formattedDate = post.data.date.toLocaleDateString('de-DE', {
   month: 'long',
   year: 'numeric',
 });
+
+const siteUrl = 'https://babi-yoga.com';
+const blogPostingSchema: Record<string, unknown> = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": post.data.title,
+  "datePublished": post.data.date.toISOString(),
+  "description": post.data.excerpt,
+  "author": {
+    "@type": "Person",
+    "name": "Nikola Babi",
+    "url": `${siteUrl}/ueber-mich`
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Babi Yoga",
+    "url": siteUrl
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `${siteUrl}/blog/${post.id}`
+  }
+};
+if (post.data.image) {
+  blogPostingSchema.image = `${siteUrl}${post.data.image}`;
+}
 ---
 
 <Layout
@@ -25,6 +51,9 @@ const formattedDate = post.data.date.toLocaleDateString('de-DE', {
   description={post.data.excerpt}
   ogImage={post.data.image}
 >
+  <!-- BlogPosting Schema (SEO) -->
+  <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
+
   <!-- Article Header -->
   <section class="pt-28 pb-12 bg-cream">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">

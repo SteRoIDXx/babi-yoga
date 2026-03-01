@@ -129,6 +129,7 @@ function isActive(href: string): boolean {
 
   function openMenu() {
     menuBtn?.classList.add('active');
+    menuBtn?.setAttribute('aria-expanded', 'true');
     overlay?.classList.add('active');
     mobileNav?.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -136,6 +137,7 @@ function isActive(href: string): boolean {
 
   function closeMenu() {
     menuBtn?.classList.remove('active');
+    menuBtn?.setAttribute('aria-expanded', 'false');
     overlay?.classList.remove('active');
     mobileNav?.classList.remove('active');
     document.body.style.overflow = '';

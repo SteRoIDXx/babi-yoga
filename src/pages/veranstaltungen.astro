@@ -5,6 +5,7 @@ import PageHero from '../components/PageHero.astro';
 const events = [
   {
     date: '29. März 2026',
+    isoDate: '2026-03-29T16:00:00+02:00',
     weekday: 'Sonntag',
     time: '16:00 Uhr',
     title: 'Offener Mantra-Singkreis',
@@ -17,6 +18,8 @@ const events = [
   },
   {
     date: '22. – 25. Mai 2026',
+    isoDate: '2026-05-22T17:00:00+02:00',
+    isoEndDate: '2026-05-25',
     weekday: 'Pfingsten',
     time: 'ab 17:00 Uhr',
     title: 'Yogaretreat im Wendland',
@@ -26,6 +29,29 @@ const events = [
     highlight: false,
   },
 ];
+
+const eventSchemas = events.map((event) => ({
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": event.title,
+  "startDate": event.isoDate,
+  ...(event.isoEndDate && { "endDate": event.isoEndDate }),
+  "description": event.description,
+  "location": {
+    "@type": "Place",
+    "name": event.location.split(',')[0].trim(),
+    "address": event.location
+  },
+  "organizer": {
+    "@type": "Person",
+    "name": "Nikola Babi",
+    "url": "https://babi-yoga.com"
+  },
+  ...(event.price && { "offers": {
+    "@type": "Offer",
+    "description": event.price
+  }})
+}));
 
 const ferienTermine = [
   '30.03. – 06.04.2026',
@@ -44,6 +70,11 @@ const ferienTermine = [
     backgroundImage="/images/yoga-gruppe.webp"
     imagePosition="center 18%"
   />
+
+  <!-- Event Schema (SEO) -->
+  {eventSchemas.map((schema) => (
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  ))}
 
   <!-- Intro -->
   <section class="section-padding bg-cream">
