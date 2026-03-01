@@ -23,7 +23,9 @@ backend:
 
 # Lokale Entwicklung: npm run cms:dev
 # (Erlaubt CMS-Zugriff ohne Authentifizierung)
-local_backend: true
+# local_backend: true
+# ↑ Nur für lokale Entwicklung aktivieren (npm run cms:dev)
+local_backend: false
 
 # Medien-Einstellungen
 media_folder: "public/images"

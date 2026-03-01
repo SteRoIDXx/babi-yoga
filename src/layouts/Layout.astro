@@ -9,6 +9,7 @@ interface Props {
   ogTitle?: string;
   ogImage?: string;
   canonicalUrl?: string;
+  noindex?: boolean;
 }
 
 const {
@@ -17,6 +18,7 @@ const {
   ogTitle,
   ogImage = '/images/og-default.jpg',
   canonicalUrl,
+  noindex = false,
 } = Astro.props;
 
 const currentPath = Astro.url.pathname;
@@ -30,10 +32,12 @@ const absoluteOgImage = ogImage?.startsWith('http') ? ogImage : `${siteUrl}${ogI
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <title>{title}</title>
 
     <!-- Canonical URL -->
-    <link rel="canonical" href={canonical} />
+    {!noindex && <link rel="canonical" href={canonical} />}
+    <link rel="alternate" hreflang="de" href={canonical} />
 
     <!-- Open Graph -->
     <meta property="og:title" content={ogTitle || title} />
@@ -81,6 +85,21 @@ const absoluteOgImage = ogImage?.startsWith('http') ? ogImage : `${siteUrl}${ogI
         "name": "Nikola Babi",
         "jobTitle": "Yogalehrerin & Ayurveda-Beraterin"
       },
+      "image": "https://babi-yoga.com/images/og-default.jpg",
+      "priceRange": "$$",
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 53.4631,
+        "longitude": 9.7978
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "09:00",
+          "closes": "20:00"
+        }
+      ],
       "sameAs": [
         "https://www.facebook.com/nikola.babi/",
         "https://www.instagram.com/babi_nikola/",
