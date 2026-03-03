@@ -31,6 +31,7 @@ const posts = (await getCollection('blog')).sort(
             slug={post.id}
             image={post.data.image}
             imageAlt={post.data.imageAlt}
+            videoUrl={post.data.videoUrl}
           />
         ))}
       </div>

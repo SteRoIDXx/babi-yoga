@@ -58,11 +58,13 @@ function isActive(href: string): boolean {
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center h-20">
       <!-- Logo -->
-      <a href="/" class="flex items-center min-h-[44px] shrink-0" aria-label="Zur Startseite">
+      <a href="/" class="flex items-center min-h-[44px] shrink-0">
         <img
-          src="/images/babi-yoga-logo.png"
+          src="/images/babi-yoga-logo.webp"
           alt="Babi Yoga — Yoga in Neu Wulmstorf"
           class="h-12 sm:h-14 w-auto"
+          width="643"
+          height="178"
           loading="eager"
         />
       </a>
@@ -131,7 +133,7 @@ function isActive(href: string): boolean {
     <div class="flex flex-col gap-5 overflow-y-auto">
       {mobileNavGroups.map((group) => (
         <div>
-          <p class="px-4 text-[0.6875rem] font-bold tracking-[0.15em] uppercase text-charcoal/40 mb-1">{group.heading}</p>
+          <p class="px-4 text-[0.6875rem] font-bold tracking-[0.15em] uppercase text-charcoal mb-1">{group.heading}</p>
           <div class="flex flex-col">
             {group.items.map((item) => (
               <a

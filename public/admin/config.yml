@@ -25,7 +25,7 @@ backend:
 # (Erlaubt CMS-Zugriff ohne Authentifizierung)
 # local_backend: true
 # ↑ Nur für lokale Entwicklung aktivieren (npm run cms:dev)
-local_backend: false
+local_backend: true
 
 # Medien-Einstellungen
 media_folder: "public/images"
@@ -53,11 +53,7 @@ collections:
     slug: "{{slug}}"
     extension: "md"
     format: "frontmatter"
-    sortable_fields:
-      fields: ["date", "title"]
-      default:
-        field: "date"
-        direction: "Descending"
+    sortable_fields: ["date", "title"]
     summary: "{{title}} — {{date}}"
     fields:
       - label: "Titel"
@@ -91,6 +87,12 @@ collections:
         widget: "string"
         required: false
         hint: "Beschreibung des Bildes für Barrierefreiheit"
+
+      - label: "Video-URL"
+        name: "videoUrl"
+        widget: "string"
+        required: false
+        hint: "YouTube- oder Vimeo-Link einfügen (z.B. https://www.youtube.com/watch?v=... oder https://vimeo.com/...). Das Video wird automatisch im Beitrag eingebettet."
 
       - label: "Inhalt"
         name: "body"

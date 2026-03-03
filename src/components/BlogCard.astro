@@ -6,9 +6,10 @@ interface Props {
   slug: string;
   image?: string;
   imageAlt?: string;
+  videoUrl?: string;
 }
 
-const { title, date, excerpt, slug, image, imageAlt } = Astro.props;
+const { title, date, excerpt, slug, image, imageAlt, videoUrl } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('de-DE', {
   day: 'numeric',
@@ -19,7 +20,7 @@ const formattedDate = date.toLocaleDateString('de-DE', {
 
 <article class="fade-in card group overflow-hidden p-0">
   {image && (
-    <div class="aspect-[16/9] overflow-hidden">
+    <div class="aspect-[16/9] overflow-hidden relative">
       <img
         src={image}
         srcset={image?.endsWith('.webp') ? `${image.replace('.webp', '').replace('/images/', '/images/responsive/') + '-640w.webp'} 640w, ${image.replace('.webp', '').replace('/images/', '/images/responsive/') + '-1024w.webp'} 1024w, ${image} 1600w` : undefined}
@@ -29,6 +30,26 @@ const formattedDate = date.toLocaleDateString('de-DE', {
         decoding="async"
         class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
       />
+      {/* Video-Play-Badge */}
+      {videoUrl && (
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-14 h-14 rounded-full bg-wine/80 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:bg-wine group-hover:scale-110 transition-all duration-300">
+            <svg class="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </div>
+      )}
+    </div>
+  )}
+  {/* Wenn kein Bild aber Video → Play-Platzhalter */}
+  {!image && videoUrl && (
+    <div class="aspect-[16/9] bg-gradient-to-br from-wine/10 to-wine/5 flex items-center justify-center">
+      <div class="w-16 h-16 rounded-full bg-wine/80 flex items-center justify-center shadow-lg group-hover:bg-wine group-hover:scale-110 transition-all duration-300">
+        <svg class="w-7 h-7 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </div>
     </div>
   )}
   <div class="p-6">
@@ -44,8 +65,8 @@ const formattedDate = date.toLocaleDateString('de-DE', {
       {excerpt}
     </p>
     <a href={`/blog/${slug}`} class="inline-flex items-center gap-2 text-wine text-sm font-semibold hover:gap-3 transition-all duration-300">
-      Weiterlesen
-      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      Weiterlesen<span class="sr-only">: {title}</span>
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M5 12h14m-7-7l7 7-7 7" />
       </svg>
     </a>
