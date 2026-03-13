@@ -1,0 +1,228 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { createPost } from '../../../lib/db';
+import { validateCsrfToken, generateCsrfToken } from '../../../lib/auth';
+
+let errors: string[] = [];
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const csrf = formData.get('_csrf') as string;
+
+  if (!validateCsrfToken(csrf)) {
+    errors.push('Sitzung abgelaufen. Bitte erneut versuchen.');
+  } else {
+    const title = (formData.get('title') as string || '').trim();
+    const slug = (formData.get('slug') as string || '').trim().toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
+    const excerpt = (formData.get('excerpt') as string || '').trim();
+    const body_md = (formData.get('body_md') as string || '').trim();
+    const image = (formData.get('image') as string || '').trim();
+    const image_alt = (formData.get('image_alt') as string || '').trim();
+    const video_url = (formData.get('video_url') as string || '').trim();
+    const published = formData.get('published') === '1';
+
+    if (!title) errors.push('Titel ist erforderlich.');
+    if (!slug) errors.push('Slug ist erforderlich.');
+    if (title.length > 200) errors.push('Titel darf max. 200 Zeichen lang sein.');
+    if (excerpt.length > 500) errors.push('Excerpt darf max. 500 Zeichen lang sein.');
+    if (body_md.length > 50000) errors.push('Text darf max. 50.000 Zeichen lang sein.');
+
+    if (errors.length === 0) {
+      try {
+        createPost({ title, slug, excerpt, body_md, image, image_alt, video_url, published });
+        return Astro.redirect('/admin/blog/?success=created');
+      } catch (err: any) {
+        if (err.message?.includes('UNIQUE')) {
+          errors.push('Ein Beitrag mit diesem Slug existiert bereits.');
+        } else {
+          errors.push('Fehler beim Speichern.');
+        }
+      }
+    }
+  }
+}
+
+const csrfToken = generateCsrfToken();
+---
+
+<AdminLayout title="Neuer Beitrag" activeNav="blog">
+  <div class="flex items-center gap-4 mb-6">
+    <a href="/admin/blog/" style="color: var(--charcoal); text-decoration: none;">← Zurück</a>
+    <h1 class="page-title" style="margin-bottom: 0;">Neuer Beitrag</h1>
+  </div>
+
+  {errors.length > 0 && (
+    <div class="alert alert-error">
+      {errors.map(e => <div>{e}</div>)}
+    </div>
+  )}
+
+  <form method="POST" class="card">
+    <input type="hidden" name="_csrf" value={csrfToken} />
+
+    <div class="form-group">
+      <label for="title">Titel *</label>
+      <input type="text" id="title" name="title" required maxlength="200" placeholder="z.B. Yogaretreat Pfingsten 2026" />
+    </div>
+
+    <div class="form-group">
+      <label for="slug">Slug (URL-Pfad) *</label>
+      <input type="text" id="slug" name="slug" required maxlength="200" placeholder="z.B. yogaretreat-pfingsten-2026" pattern="[a-z0-9-]+" />
+      <small style="color: var(--gray-muted);">Nur Kleinbuchstaben, Zahlen und Bindestriche</small>
+    </div>
+
+    <div class="form-group">
+      <label for="excerpt">Kurzbeschreibung</label>
+      <textarea id="excerpt" name="excerpt" maxlength="500" rows="2" placeholder="Kurze Vorschau des Beitrags (max. 500 Zeichen)"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="body_md">Inhalt (Markdown)</label>
+      <textarea id="body_md" name="body_md" maxlength="50000" rows="15" placeholder="Schreiben Sie hier Ihren Beitrag...
+
+Formatierung:
+**fett**
+*kursiv*
+[Link-Text](https://url.de)
+## Überschrift
+- Aufzählung"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Beitragsbild</label>
+      <input type="hidden" id="image" name="image" maxlength="500" />
+      <div id="upload-area" style="border: 2px dashed var(--sand-dark); border-radius: 12px; padding: 1.5rem; text-align: center; cursor: pointer; transition: border-color 0.2s;" onclick="document.getElementById('file-input').click()">
+        <div id="upload-placeholder">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📷</div>
+          <div style="color: var(--charcoal); font-weight: 500;">Bild auswählen</div>
+          <div style="color: var(--gray-muted); font-size: 0.8125rem; margin-top: 0.25rem;">JPG, PNG oder WebP · max. 10 MB</div>
+        </div>
+        <div id="upload-preview" style="display: none;">
+          <img id="preview-img" src="" alt="Vorschau" style="max-height: 200px; border-radius: 8px; margin-bottom: 0.75rem;" />
+          <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <span id="upload-filename" style="font-size: 0.8125rem; color: var(--gray-muted);"></span>
+            <button type="button" id="remove-image" style="background: none; border: none; color: var(--wine); cursor: pointer; font-size: 0.875rem; font-weight: 600;">✕ Entfernen</button>
+          </div>
+        </div>
+        <div id="upload-progress" style="display: none;">
+          <div style="color: var(--wine); font-weight: 500;">Wird hochgeladen…</div>
+        </div>
+      </div>
+      <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" style="display: none;" />
+    </div>
+
+    <div class="form-group">
+      <label for="image_alt">Bild-Beschreibung (Alt-Text)</label>
+      <input type="text" id="image_alt" name="image_alt" maxlength="200" placeholder="Beschreibung des Bildes" />
+    </div>
+
+    <div class="form-group">
+      <label for="video_url">Video-URL (YouTube/Vimeo)</label>
+      <input type="url" id="video_url" name="video_url" maxlength="500" placeholder="https://www.youtube.com/watch?v=..." />
+    </div>
+
+    <div class="form-group">
+      <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+        <input type="checkbox" name="published" value="1" style="width: 18px; height: 18px; accent-color: var(--wine);" />
+        Sofort veröffentlichen
+      </label>
+    </div>
+
+    <div class="flex gap-2 mt-4">
+      <button type="submit" class="btn btn-primary">Beitrag speichern</button>
+      <a href="/admin/blog/" class="btn btn-secondary">Abbrechen</a>
+    </div>
+  </form>
+
+  <script>
+    // Auto-generate slug from title
+    const titleInput = document.getElementById('title');
+    const slugInput = document.getElementById('slug');
+    let slugManuallyEdited = false;
+
+    slugInput?.addEventListener('input', () => { slugManuallyEdited = true; });
+
+    titleInput?.addEventListener('input', () => {
+      if (!slugManuallyEdited && slugInput) {
+        const umlauts: Record<string, string> = { 'ä': 'ae', 'ö': 'oe', 'ü': 'ue', 'ß': 'ss', 'Ä': 'Ae', 'Ö': 'Oe', 'Ü': 'Ue' };
+        let slug = (titleInput as HTMLInputElement).value.toLowerCase();
+        for (const [from, to] of Object.entries(umlauts)) {
+          slug = slug.replace(new RegExp(from, 'g'), to);
+        }
+        (slugInput as HTMLInputElement).value = slug.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      }
+    });
+
+    // Image Upload
+    const fileInput = document.getElementById('file-input') as HTMLInputElement;
+    const imageInput = document.getElementById('image') as HTMLInputElement;
+    const uploadArea = document.getElementById('upload-area')!;
+    const placeholder = document.getElementById('upload-placeholder')!;
+    const preview = document.getElementById('upload-preview')!;
+    const previewImg = document.getElementById('preview-img') as HTMLImageElement;
+    const progress = document.getElementById('upload-progress')!;
+    const filenameEl = document.getElementById('upload-filename')!;
+    const removeBtn = document.getElementById('remove-image')!;
+
+    fileInput?.addEventListener('change', async () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+
+      // Vorschau sofort zeigen
+      placeholder.style.display = 'none';
+      progress.style.display = 'block';
+      preview.style.display = 'none';
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const res = await fetch('/api/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || 'Upload fehlgeschlagen');
+          placeholder.style.display = 'block';
+          progress.style.display = 'none';
+          return;
+        }
+
+        imageInput.value = data.url;
+        previewImg.src = data.url;
+        filenameEl.textContent = data.filename;
+        progress.style.display = 'none';
+        preview.style.display = 'block';
+        uploadArea.style.borderColor = 'var(--wine)';
+      } catch {
+        alert('Upload fehlgeschlagen. Bitte versuche es erneut.');
+        placeholder.style.display = 'block';
+        progress.style.display = 'none';
+      }
+    });
+
+    removeBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      imageInput.value = '';
+      previewImg.src = '';
+      fileInput.value = '';
+      preview.style.display = 'none';
+      placeholder.style.display = 'block';
+      uploadArea.style.borderColor = 'var(--sand-dark)';
+    });
+
+    // Drag & Drop
+    uploadArea?.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = 'var(--wine)'; });
+    uploadArea?.addEventListener('dragleave', () => { if (!imageInput.value) uploadArea.style.borderColor = 'var(--sand-dark)'; });
+    uploadArea?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const file = (e as DragEvent).dataTransfer?.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        fileInput.files = dt.files;
+        fileInput.dispatchEvent(new Event('change'));
+      }
+    });
+  </script>
+</AdminLayout>

@@ -1,5 +1,6 @@
 ---
 import SectionHeading from './SectionHeading.astro';
+import { getActiveSchedule } from '../lib/db';
 
 const yogaTypes = [
   {
@@ -28,26 +29,24 @@ const yogaTypes = [
   },
 ];
 
-const schedule = [
-  { day: 'Montag', classes: [
-    { time: '16:30 – 17:15', name: 'Kinderyoga', detail: '6–9 Jahre' },
-    { time: '17:30 – 18:15', name: 'Teens-Yoga', detail: '9–12 Jahre' },
-  ]},
-  { day: 'Dienstag', classes: [
-    { time: '18:00 – 19:30', name: 'Hatha-Yoga', detail: 'Stufe 1–2' },
-    { time: '19:45 – 21:15', name: 'Hatha-Yoga', detail: 'Stufe 2–3' },
-  ]},
-  { day: 'Mittwoch', classes: [
-    { time: '19:00 – 20:30', name: 'Hatha-Yoga', detail: 'Stufe 0–2' },
-  ]},
-  { day: 'Donnerstag', classes: [
-    { time: '18:00 – 19:30', name: 'Yin-Yoga für Frauen', detail: '' },
-    { time: '19:45 – 21:15', name: 'Mantra-Yoga', detail: 'Stufe 2–3' },
-  ]},
-  { day: 'Freitag', classes: [
-    { time: '09:00 – 10:30', name: 'Sanfte Morgenklasse', detail: 'Alle Stufen' },
-  ]},
-];
+// Kursplan aus der Datenbank laden und nach Tag gruppieren
+const dbSchedule = getActiveSchedule() as any[];
+const dayOrder = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+const scheduleByDay = new Map<string, any[]>();
+for (const entry of dbSchedule) {
+  if (!scheduleByDay.has(entry.day)) scheduleByDay.set(entry.day, []);
+  scheduleByDay.get(entry.day)!.push(entry);
+}
+const schedule = dayOrder
+  .filter(day => scheduleByDay.has(day))
+  .map(day => ({
+    day,
+    classes: scheduleByDay.get(day)!.map(e => ({
+      time: e.time_start,
+      name: e.course_name,
+      detail: e.note || '',
+    })),
+  }));
 ---
 
 <section id="yoga" class="section-padding bg-cream">

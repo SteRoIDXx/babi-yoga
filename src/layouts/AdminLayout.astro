@@ -1,0 +1,331 @@
+---
+export const prerender = false;
+
+interface Props {
+  title: string;
+  activeNav?: string;
+}
+
+const { title, activeNav } = Astro.props;
+const user = Astro.locals.user;
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} — Admin</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <style is:global>
+      /* === Admin Panel CSS — Standalone, kein Tailwind nötig === */
+      :root {
+        --wine: #781d4c;
+        --wine-light: #8e2a5c;
+        --wine-dark: #5e1639;
+        --gold: #e9a825;
+        --gold-light: #f0be4f;
+        --cream: #f7ecf9;
+        --sand: #f0e8f1;
+        --warm-white: #fdf8fd;
+        --night: #292420;
+        --charcoal: #616161;
+        --gray-muted: #756d65;
+        --success: #059669;
+        --danger: #dc2626;
+        --warning: #d97706;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
+        background: var(--cream);
+        color: var(--night);
+        line-height: 1.6;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* --- Top Bar --- */
+      .admin-topbar {
+        background: var(--wine);
+        color: white;
+        padding: 0 1.5rem;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        box-shadow: 0 2px 8px rgba(120, 29, 76, 0.2);
+      }
+
+      .admin-topbar a { color: white; text-decoration: none; }
+      .admin-topbar-brand {
+        font-weight: 700;
+        font-size: 1.125rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .admin-topbar-brand span { opacity: 0.6; font-weight: 400; font-size: 0.875rem; }
+
+      .admin-topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.875rem;
+      }
+
+      .admin-topbar-user { opacity: 0.8; }
+
+      .btn-logout {
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.25);
+        color: white;
+        padding: 0.375rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8125rem;
+        font-family: inherit;
+        transition: background 0.2s;
+      }
+      .btn-logout:hover { background: rgba(255,255,255,0.25); }
+
+      /* --- Navigation --- */
+      .admin-nav {
+        background: white;
+        border-bottom: 1px solid var(--sand);
+        padding: 0 1.5rem;
+        display: flex;
+        gap: 0;
+        overflow-x: auto;
+      }
+
+      .admin-nav a {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--charcoal);
+        text-decoration: none;
+        border-bottom: 2px solid transparent;
+        white-space: nowrap;
+        transition: all 0.2s;
+      }
+      .admin-nav a:hover { color: var(--wine); background: var(--cream); }
+      .admin-nav a.active {
+        color: var(--wine);
+        border-bottom-color: var(--wine);
+        font-weight: 600;
+      }
+
+      /* --- Main Content --- */
+      .admin-main {
+        flex: 1;
+        padding: 2rem 1.5rem;
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      /* --- Utilities --- */
+      .page-title {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--wine);
+        margin-bottom: 1.5rem;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid var(--sand);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+        text-decoration: none;
+        line-height: 1;
+      }
+      .btn-primary {
+        background: var(--wine);
+        color: white;
+      }
+      .btn-primary:hover { background: var(--wine-dark); transform: translateY(-1px); }
+
+      .btn-secondary {
+        background: var(--sand);
+        color: var(--night);
+      }
+      .btn-secondary:hover { background: var(--cream); }
+
+      .btn-danger {
+        background: var(--danger);
+        color: white;
+      }
+      .btn-danger:hover { opacity: 0.9; }
+
+      .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.8125rem; }
+
+      .form-group { margin-bottom: 1.25rem; }
+      .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--night);
+        margin-bottom: 0.375rem;
+      }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 0.625rem 0.875rem;
+        border: 1px solid var(--sand);
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 0.9375rem;
+        color: var(--night);
+        background: white;
+        transition: border-color 0.2s;
+      }
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: var(--wine);
+        box-shadow: 0 0 0 3px rgba(120, 29, 76, 0.1);
+      }
+      .form-group textarea { resize: vertical; min-height: 120px; }
+
+      .alert {
+        padding: 1rem 1.25rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+      .alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+      .alert-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+      .alert-warning { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--sand);
+        font-size: 0.875rem;
+      }
+      th {
+        font-weight: 600;
+        color: var(--charcoal);
+        font-size: 0.8125rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      tr:hover td { background: var(--cream); }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.625rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .badge-green { background: #ecfdf5; color: #065f46; }
+      .badge-yellow { background: #fffbeb; color: #92400e; }
+      .badge-red { background: #fef2f2; color: #991b1b; }
+      .badge-gray { background: #f3f4f6; color: #6b7280; }
+
+      .flex { display: flex; }
+      .items-center { align-items: center; }
+      .justify-between { justify-content: space-between; }
+      .gap-2 { gap: 0.5rem; }
+      .gap-4 { gap: 1rem; }
+      .mb-4 { margin-bottom: 1rem; }
+      .mb-6 { margin-bottom: 1.5rem; }
+      .mt-4 { margin-top: 1rem; }
+      .text-sm { font-size: 0.875rem; }
+      .text-muted { color: var(--gray-muted); }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .admin-main { padding: 1rem; }
+        .page-title { font-size: 1.375rem; }
+        .admin-nav { padding: 0 0.75rem; }
+        .admin-nav a { padding: 0.75rem 0.875rem; font-size: 0.8125rem; }
+        table { display: block; overflow-x: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Bar -->
+    <header class="admin-topbar">
+      <a href="/admin/" class="admin-topbar-brand">
+        Babi Yoga <span>Admin</span>
+      </a>
+      <div class="admin-topbar-right">
+        <span class="admin-topbar-user">{user?.name || user?.email}</span>
+        <form method="POST" action="/api/auth/logout" style="display:inline;">
+          <button type="submit" class="btn-logout">Abmelden</button>
+        </form>
+      </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="admin-nav">
+      <a href="/admin/" class:list={[{ active: activeNav === 'dashboard' }]}>
+        📊 Dashboard
+      </a>
+      <a href="/admin/blog/" class:list={[{ active: activeNav === 'blog' }]}>
+        📝 Blog
+      </a>
+      <a href="/admin/announcements/" class:list={[{ active: activeNav === 'announcements' }]}>
+        📢 Ankündigungen
+      </a>
+      <a href="/admin/schedule/" class:list={[{ active: activeNav === 'schedule' }]}>
+        📅 Kursplan
+      </a>
+      <a href="/admin/events/" class:list={[{ active: activeNav === 'events' }]}>
+        🎉 Events
+      </a>
+      <a href="/admin/holidays/" class:list={[{ active: activeNav === 'holidays' }]}>
+        🏖 Ferien
+      </a>
+      <a href="/admin/password" class:list={[{ active: activeNav === 'password' }]} style="margin-left:auto;">
+        🔑 Passwort
+      </a>
+      <a href="/" target="_blank" style="opacity:0.6;">
+        ↗ Website ansehen
+      </a>
+    </nav>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <slot />
+    </main>
+  </body>
+</html>

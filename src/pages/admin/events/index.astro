@@ -1,0 +1,95 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { getAllEvents, deleteEvent } from '../../../lib/db';
+import { validateCsrfToken, generateCsrfToken } from '../../../lib/auth';
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const csrf = formData.get('_csrf') as string;
+  const action = formData.get('_action') as string;
+
+  if (validateCsrfToken(csrf) && action === 'delete') {
+    const id = Number(formData.get('id'));
+    if (id) deleteEvent(id);
+  }
+}
+
+const events = getAllEvents() as any[];
+const csrfToken = generateCsrfToken();
+const now = new Date().toISOString().split('T')[0];
+const success = Astro.url.searchParams.get('success');
+---
+
+<AdminLayout title="Events" activeNav="events">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="page-title" style="margin-bottom: 0;">Reisen & Workshops</h1>
+    <a href="/admin/events/new" class="btn btn-primary">+ Neues Event</a>
+  </div>
+
+  {success === 'created' && <div class="alert alert-success">Event erfolgreich erstellt!</div>}
+  {success === 'updated' && <div class="alert alert-success">Event erfolgreich aktualisiert!</div>}
+
+  {events.length === 0 ? (
+    <div class="card" style="text-align: center; padding: 3rem;">
+      <p style="color: var(--gray-muted); margin-bottom: 1rem;">Noch keine Events vorhanden.</p>
+      <a href="/admin/events/new" class="btn btn-primary">Erstes Event anlegen</a>
+    </div>
+  ) : (
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <table>
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Datum</th>
+            <th>Ort</th>
+            <th>Status</th>
+            <th style="width: 120px;">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          {events.map((event: any) => {
+            const isPast = event.date_start && event.date_start < now;
+            return (
+              <tr style={isPast ? 'opacity: 0.5;' : ''}>
+                <td>
+                  <a href={`/admin/events/${event.id}`} style="color: var(--wine); text-decoration: none; font-weight: 500;">
+                    {event.title}
+                  </a>
+                  {isPast && <span class="badge badge-gray" style="margin-left: 0.5rem;">Vergangen</span>}
+                </td>
+                <td class="text-sm">
+                  {event.date_start
+                    ? new Date(event.date_start).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                    : '–'
+                  }
+                  {event.date_end && event.date_end !== event.date_start && (
+                    <span> – {new Date(event.date_end).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                  )}
+                </td>
+                <td class="text-sm text-muted">{event.location || '–'}</td>
+                <td>
+                  {event.published
+                    ? <span class="badge badge-green">Veröffentlicht</span>
+                    : <span class="badge badge-gray">Entwurf</span>
+                  }
+                </td>
+                <td>
+                  <div class="flex gap-2">
+                    <a href={`/admin/events/${event.id}`} class="btn btn-secondary btn-sm">Bearbeiten</a>
+                    <form method="POST" style="display:inline;" onsubmit="return confirm('Event löschen?')">
+                      <input type="hidden" name="_csrf" value={csrfToken} />
+                      <input type="hidden" name="_action" value="delete" />
+                      <input type="hidden" name="id" value={event.id} />
+                      <button type="submit" class="btn btn-danger btn-sm">×</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  )}
+</AdminLayout>

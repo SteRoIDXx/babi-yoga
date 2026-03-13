@@ -1,20 +1,26 @@
 ---
-const items = [
-  'Ferien — Aktuelle Ferienzeiten beachten',
-  'Kinderyoga — Kurse für Kinder von 6–12 Jahren',
-  'Offener Mantra-Singkreis — 29.03.2026',
-  'Yogaretreat Pfingsten 2026 — 22.-25.05.2026 im Wendland',
-  'Yogakurse in Präsenz und online-live',
-];
+import { getActiveAnnouncements } from '../lib/db';
+
+const announcements = getActiveAnnouncements() as any[];
+const items = announcements.map(a => ({
+  text: a.title,
+  link: a.link || null,
+}));
 ---
 
-<div class="ticker-wrapper py-3">
-  <div class="ticker-track">
-    {[...items, ...items].map((item) => (
-      <span class="inline-flex items-center gap-4 px-8 text-sm font-medium whitespace-nowrap">
-        <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>
-        {item}
-      </span>
-    ))}
+{items.length > 0 && (
+  <div class="ticker-wrapper py-3">
+    <div class="ticker-track">
+      {[...items, ...items].map((item) => (
+        <span class="inline-flex items-center gap-4 px-8 text-sm font-medium whitespace-nowrap">
+          <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>
+          {item.link ? (
+            <a href={item.link} class="hover:text-gold transition-colors">{item.text}</a>
+          ) : (
+            item.text
+          )}
+        </span>
+      ))}
+    </div>
   </div>
-</div>
+)}

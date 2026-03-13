@@ -1,0 +1,197 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { getEventById, updateEvent, deleteEvent } from '../../../lib/db';
+import { validateCsrfToken, generateCsrfToken } from '../../../lib/auth';
+
+const id = Number(Astro.params.id);
+let event = getEventById(id) as any;
+
+if (!event) return Astro.redirect('/admin/events/');
+
+let errors: string[] = [];
+let successMsg = '';
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const csrf = formData.get('_csrf') as string;
+  const action = formData.get('_action') as string;
+
+  if (!validateCsrfToken(csrf)) {
+    errors.push('Sitzung abgelaufen.');
+  } else if (action === 'delete') {
+    deleteEvent(id);
+    return Astro.redirect('/admin/events/?success=deleted');
+  } else {
+    const title = (formData.get('title') as string || '').trim();
+    const slug = (formData.get('slug') as string || '').trim().toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
+    const description = (formData.get('description') as string || '').trim();
+    const date_start = (formData.get('date_start') as string || '').trim();
+    const date_end = (formData.get('date_end') as string || '').trim();
+    const image = (formData.get('image') as string || '').trim();
+    const location = (formData.get('location') as string || '').trim();
+    const published = formData.get('published') === '1';
+
+    if (!title) errors.push('Titel ist erforderlich.');
+    if (!slug) errors.push('Slug ist erforderlich.');
+
+    if (errors.length === 0) {
+      try {
+        updateEvent(id, { title, slug, description, date_start: date_start || undefined, date_end: date_end || undefined, image: image || undefined, location: location || undefined, published });
+        event = getEventById(id);
+        successMsg = 'Änderungen gespeichert!';
+      } catch (err: any) {
+        if (err.message?.includes('UNIQUE')) errors.push('Ein anderes Event mit diesem Slug existiert bereits.');
+        else errors.push('Fehler beim Speichern.');
+      }
+    }
+  }
+}
+
+const csrfToken = generateCsrfToken();
+---
+
+<AdminLayout title={`${event.title} bearbeiten`} activeNav="events">
+  <div class="flex items-center gap-4 mb-6">
+    <a href="/admin/events/" style="color: var(--charcoal); text-decoration: none;">← Zurück</a>
+    <h1 class="page-title" style="margin-bottom: 0;">Event bearbeiten</h1>
+  </div>
+
+  {errors.length > 0 && <div class="alert alert-error">{errors.map(e => <div>{e}</div>)}</div>}
+  {successMsg && <div class="alert alert-success">{successMsg}</div>}
+
+  <form method="POST" class="card">
+    <input type="hidden" name="_csrf" value={csrfToken} />
+
+    <div class="form-group">
+      <label for="title">Titel *</label>
+      <input type="text" id="title" name="title" required maxlength="200" value={event.title} />
+    </div>
+
+    <div class="form-group">
+      <label for="slug">Slug *</label>
+      <input type="text" id="slug" name="slug" required maxlength="200" value={event.slug} />
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div class="form-group">
+        <label for="date_start">Startdatum</label>
+        <input type="date" id="date_start" name="date_start" value={event.date_start || ''} />
+      </div>
+      <div class="form-group">
+        <label for="date_end">Enddatum</label>
+        <input type="date" id="date_end" name="date_end" value={event.date_end || ''} />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="location">Ort</label>
+      <input type="text" id="location" name="location" maxlength="200" value={event.location || ''} />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Beschreibung (Markdown)</label>
+      <textarea id="description" name="description" maxlength="10000" rows="8">{event.description}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Event-Bild</label>
+      <input type="hidden" id="image" name="image" maxlength="500" value={event.image || ''} />
+      <div id="upload-area" style={`border: 2px dashed ${event.image ? 'var(--wine)' : 'var(--sand-dark)'}; border-radius: 12px; padding: 1.5rem; text-align: center; cursor: pointer; transition: border-color 0.2s;`} onclick="document.getElementById('file-input').click()">
+        <div id="upload-placeholder" style={event.image ? 'display:none' : ''}>
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📷</div>
+          <div style="color: var(--charcoal); font-weight: 500;">Bild auswählen</div>
+          <div style="color: var(--gray-muted); font-size: 0.8125rem; margin-top: 0.25rem;">JPG, PNG oder WebP · max. 10 MB</div>
+        </div>
+        <div id="upload-preview" style={event.image ? '' : 'display:none'}>
+          <img id="preview-img" src={event.image || ''} alt="Vorschau" style="max-height: 200px; border-radius: 8px; margin-bottom: 0.75rem;" />
+          <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <span id="upload-filename" style="font-size: 0.8125rem; color: var(--gray-muted);">{event.image?.split('/').pop() || ''}</span>
+            <button type="button" id="remove-image" style="background: none; border: none; color: var(--wine); cursor: pointer; font-size: 0.875rem; font-weight: 600;">✕ Entfernen</button>
+          </div>
+        </div>
+        <div id="upload-progress" style="display: none;">
+          <div style="color: var(--wine); font-weight: 500;">Wird hochgeladen…</div>
+        </div>
+      </div>
+      <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" style="display: none;" />
+    </div>
+
+    <div class="form-group">
+      <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+        <input type="checkbox" name="published" value="1" checked={event.published} style="width: 18px; height: 18px; accent-color: var(--wine);" />
+        Veröffentlicht
+      </label>
+    </div>
+
+    <div class="flex items-center justify-between mt-4">
+      <div class="flex gap-2">
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        <a href="/admin/events/" class="btn btn-secondary">Abbrechen</a>
+      </div>
+
+      <form method="POST" style="display:inline;" onsubmit="return confirm('Event wirklich löschen?')">
+        <input type="hidden" name="_csrf" value={csrfToken} />
+        <input type="hidden" name="_action" value="delete" />
+        <button type="submit" class="btn btn-danger btn-sm">Löschen</button>
+      </form>
+    </div>
+  </form>
+
+  <script>
+    // Image Upload
+    const fileInput = document.getElementById('file-input') as HTMLInputElement;
+    const imageInput = document.getElementById('image') as HTMLInputElement;
+    const uploadArea = document.getElementById('upload-area')!;
+    const placeholder = document.getElementById('upload-placeholder')!;
+    const preview = document.getElementById('upload-preview')!;
+    const previewImg = document.getElementById('preview-img') as HTMLImageElement;
+    const progress = document.getElementById('upload-progress')!;
+    const filenameEl = document.getElementById('upload-filename')!;
+    const removeBtn = document.getElementById('remove-image')!;
+
+    fileInput?.addEventListener('change', async () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+      placeholder.style.display = 'none';
+      progress.style.display = 'block';
+      preview.style.display = 'none';
+      const fd = new FormData();
+      fd.append('file', file);
+      try {
+        const res = await fetch('/api/upload', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) { alert(data.error || 'Upload fehlgeschlagen'); placeholder.style.display = 'block'; progress.style.display = 'none'; return; }
+        imageInput.value = data.url;
+        previewImg.src = data.url;
+        filenameEl.textContent = data.filename;
+        progress.style.display = 'none';
+        preview.style.display = 'block';
+        uploadArea.style.borderColor = 'var(--wine)';
+      } catch { alert('Upload fehlgeschlagen.'); placeholder.style.display = 'block'; progress.style.display = 'none'; }
+    });
+
+    removeBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      imageInput.value = '';
+      previewImg.src = '';
+      fileInput.value = '';
+      preview.style.display = 'none';
+      placeholder.style.display = 'block';
+      uploadArea.style.borderColor = 'var(--sand-dark)';
+    });
+
+    uploadArea?.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = 'var(--wine)'; });
+    uploadArea?.addEventListener('dragleave', () => { if (!imageInput.value) uploadArea.style.borderColor = 'var(--sand-dark)'; });
+    uploadArea?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const file = (e as DragEvent).dataTransfer?.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        fileInput.files = dt.files;
+        fileInput.dispatchEvent(new Event('change'));
+      }
+    });
+  </script>
+</AdminLayout>

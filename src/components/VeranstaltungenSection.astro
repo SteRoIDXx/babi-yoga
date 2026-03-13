@@ -1,27 +1,33 @@
 ---
 import SectionHeading from './SectionHeading.astro';
+import { getPublishedEvents } from '../lib/db';
 
-const events = [
-  {
-    date: '29. März 2026',
-    weekday: 'Sonntag',
-    time: '16:00 Uhr',
-    title: 'Offener Mantra-Singkreis',
-    description: 'Entdecke die Kraft des gemeinsamen Singens! Wir singen, tönen und lauschen gemeinsam heilsamen Mantras und Lieder aus aller Welt. Nikola am indischen Harmonium und Ali an den Percussions. Keine musikalischen Vorkenntnisse nötig!',
-    quote: 'Es gibt keine falschen Töne.',
-    location: 'Babi-Yoga, Fischbeker Str. 4, Neu Wulmstorf',
-    highlight: true,
-  },
-  {
-    date: '22. – 25. Mai 2026',
-    weekday: 'Pfingsten',
-    time: 'ab 17:00 Uhr',
-    title: 'Yogaretreat im Wendland',
-    description: 'Hatha Yoga für Anfänger und Fortgeschrittene, Pranayama-Atemübungen und Tiefenentspannung. Ayurvedisch-vegetarische Vollpension inklusive.',
-    location: 'Göhrde im Wendland, Niedersachsen',
-    highlight: false,
-  },
-];
+const dbEvents = getPublishedEvents() as any[];
+
+const events = dbEvents.map((e, i) => {
+  const start = e.date_start ? new Date(e.date_start + 'T00:00:00') : null;
+  const end = e.date_end ? new Date(e.date_end + 'T00:00:00') : null;
+  let dateStr = '';
+  let weekday = '';
+  if (start) {
+    const opts: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+    if (end && end.getTime() !== start.getTime()) {
+      dateStr = `${start.toLocaleDateString('de-DE', { day: 'numeric' })}. – ${end.toLocaleDateString('de-DE', opts)}`;
+    } else {
+      dateStr = start.toLocaleDateString('de-DE', opts);
+    }
+    weekday = start.toLocaleDateString('de-DE', { weekday: 'long' });
+  }
+  return {
+    date: dateStr,
+    weekday,
+    time: '',
+    title: e.title,
+    description: e.description,
+    location: e.location || '',
+    highlight: i === 0,
+  };
+});
 
 const ferienTermine = [
   '30.03. – 06.04.2026',

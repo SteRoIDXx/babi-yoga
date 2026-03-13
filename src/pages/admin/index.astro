@@ -1,0 +1,78 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getAllPosts, getAllAnnouncements, getAllSchedule, getAllEvents } from '../../lib/db';
+
+const posts = getAllPosts() as any[];
+const announcements = getAllAnnouncements() as any[];
+const schedule = getAllSchedule() as any[];
+const events = getAllEvents() as any[];
+
+const activeAnnouncements = announcements.filter(a => a.active);
+const publishedPosts = posts.filter(p => p.published);
+const publishedEvents = events.filter(e => e.published);
+const activeSchedule = schedule.filter(s => s.active);
+---
+
+<AdminLayout title="Dashboard" activeNav="dashboard">
+  <h1 class="page-title">Dashboard</h1>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+    <!-- Blog -->
+    <a href="/admin/blog/" class="card" style="text-decoration: none; color: inherit;">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">📝</div>
+      <div style="font-size: 0.8125rem; color: var(--charcoal); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Blog</div>
+      <div style="font-size: 1.75rem; font-weight: 700; color: var(--wine);">{publishedPosts.length}</div>
+      <div style="font-size: 0.8125rem; color: var(--gray-muted);">
+        {publishedPosts.length === 1 ? 'veröffentlichter Beitrag' : 'veröffentlichte Beiträge'}
+        {posts.length > publishedPosts.length && <span> · {posts.length - publishedPosts.length} Entwurf{posts.length - publishedPosts.length !== 1 ? 'e' : ''}</span>}
+      </div>
+    </a>
+
+    <!-- Ankündigungen -->
+    <a href="/admin/announcements/" class="card" style="text-decoration: none; color: inherit;">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">📢</div>
+      <div style="font-size: 0.8125rem; color: var(--charcoal); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Ankündigungen</div>
+      <div style="font-size: 1.75rem; font-weight: 700; color: var(--wine);">{activeAnnouncements.length}</div>
+      <div style="font-size: 0.8125rem; color: var(--gray-muted);">aktive Ankündigung{activeAnnouncements.length !== 1 ? 'en' : ''}</div>
+    </a>
+
+    <!-- Kursplan -->
+    <a href="/admin/schedule/" class="card" style="text-decoration: none; color: inherit;">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">📅</div>
+      <div style="font-size: 0.8125rem; color: var(--charcoal); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Kursplan</div>
+      <div style="font-size: 1.75rem; font-weight: 700; color: var(--wine);">{activeSchedule.length}</div>
+      <div style="font-size: 0.8125rem; color: var(--gray-muted);">aktive Kurse</div>
+    </a>
+
+    <!-- Events -->
+    <a href="/admin/events/" class="card" style="text-decoration: none; color: inherit;">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎉</div>
+      <div style="font-size: 0.8125rem; color: var(--charcoal); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Events</div>
+      <div style="font-size: 1.75rem; font-weight: 700; color: var(--wine);">{publishedEvents.length}</div>
+      <div style="font-size: 0.8125rem; color: var(--gray-muted);">veröffentlichte Events</div>
+    </a>
+  </div>
+
+  <!-- Quick Info -->
+  <div class="card">
+    <h2 style="font-size: 1.125rem; font-weight: 700; color: var(--wine); margin-bottom: 1rem; font-family: 'Playfair Display', Georgia, serif;">Schnellstart</h2>
+    <ul style="list-style: none; padding: 0;">
+      <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--sand);">
+        <a href="/admin/blog/new" style="color: var(--wine); text-decoration: none; font-weight: 500;">+ Neuen Blog-Beitrag schreiben</a>
+      </li>
+      <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--sand);">
+        <a href="/admin/announcements/" style="color: var(--wine); text-decoration: none; font-weight: 500;">+ Neue Ankündigung erstellen</a>
+      </li>
+      <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--sand);">
+        <a href="/admin/schedule/" style="color: var(--wine); text-decoration: none; font-weight: 500;">+ Kurs zum Wochenplan hinzufügen</a>
+      </li>
+      <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--sand);">
+        <a href="/admin/events/new" style="color: var(--wine); text-decoration: none; font-weight: 500;">+ Neues Event anlegen</a>
+      </li>
+      <li style="padding: 0.5rem 0;">
+        <a href="/admin/password" style="color: var(--gray-muted); text-decoration: none; font-weight: 500;">🔑 Passwort ändern</a>
+      </li>
+    </ul>
+  </div>
+</AdminLayout>

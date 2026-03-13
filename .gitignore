@@ -17,6 +17,14 @@ pnpm-debug.log*
 .env
 .env.production
 
+# SQLite Datenbank (lokal + Server, nicht in Git)
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# Lighthouse Reports
+*.report.html
+
 # macOS-specific files
 .DS_Store
 

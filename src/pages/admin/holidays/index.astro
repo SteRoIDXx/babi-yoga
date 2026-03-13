@@ -1,0 +1,201 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { getAllHolidays, createHoliday, deleteHoliday } from '../../../lib/db';
+import { fetchSchoolHolidays } from '../../../lib/holidays';
+import { validateCsrfToken, generateCsrfToken } from '../../../lib/auth';
+
+let successMsg = '';
+let errorMsg = '';
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const csrf = formData.get('_csrf') as string;
+  const action = formData.get('_action') as string;
+
+  if (validateCsrfToken(csrf)) {
+    if (action === 'create') {
+      const name = (formData.get('name') as string || '').trim();
+      const date_start = formData.get('date_start') as string || '';
+      const date_end = formData.get('date_end') as string || '';
+      const status = formData.get('status') as string || 'info';
+      const note = (formData.get('note') as string || '').trim();
+
+      if (name && date_start && date_end && name.length <= 200) {
+        createHoliday({ name, date_start, date_end, type: 'custom', status, note: note || undefined });
+        successMsg = `"${name}" wurde erstellt.`;
+      } else {
+        errorMsg = 'Name, Startdatum und Enddatum sind Pflichtfelder.';
+      }
+    } else if (action === 'delete') {
+      const id = Number(formData.get('id'));
+      if (id) {
+        deleteHoliday(id);
+        successMsg = 'Eintrag gelöscht.';
+      }
+    } else if (action === 'import') {
+      try {
+        const result = await fetchSchoolHolidays();
+        if (result.imported > 0) {
+          successMsg = `${result.imported} Schulferien (Niedersachsen) importiert.`;
+        }
+        if (result.errors.length > 0) {
+          errorMsg = result.errors.join(' | ');
+        }
+        if (result.imported === 0 && result.errors.length === 0) {
+          errorMsg = 'Keine Ferien gefunden.';
+        }
+      } catch (err: any) {
+        errorMsg = `Import fehlgeschlagen: ${err.message || err}`;
+      }
+    }
+  }
+}
+
+const holidays = getAllHolidays() as any[];
+const csrfToken = generateCsrfToken();
+
+function formatDate(d: string) {
+  if (!d) return '–';
+  const [y, m, day] = d.split('-');
+  return `${day}.${m}.${y}`;
+}
+
+function getStatusBadge(status: string) {
+  switch (status) {
+    case 'closed': return { cls: 'badge-red', label: 'Geschlossen' };
+    case 'reduced': return { cls: 'badge-yellow', label: 'Eingeschränkt' };
+    case 'normal': return { cls: 'badge-green', label: 'Normalbetrieb' };
+    default: return { cls: 'badge-gray', label: 'Info' };
+  }
+}
+
+function getTypeBadge(type: string) {
+  return type === 'school'
+    ? { cls: 'badge-yellow', label: 'Schulferien' }
+    : { cls: 'badge-gray', label: 'Manuell' };
+}
+---
+
+<AdminLayout title="Ferien & Pausen" activeNav="holidays">
+  <h1 class="page-title">Ferien & Pausen</h1>
+  <p class="text-sm text-muted mb-6">Schulferien (Niedersachsen) werden automatisch importiert. Du kannst auch eigene Pausen hinzufügen.</p>
+
+  {successMsg && <div class="alert alert-success">{successMsg}</div>}
+  {errorMsg && <div class="alert alert-error">{errorMsg}</div>}
+
+  <!-- Schulferien Import -->
+  <div class="card mb-6" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+    <div>
+      <strong style="font-size: 0.9375rem;">Schulferien Niedersachsen</strong>
+      <p class="text-sm text-muted" style="margin-top: 0.25rem;">
+        Importiert Ferien für das aktuelle und nächste Jahr von schulferien-api.de.
+        Bestehende Schulferien werden dabei aktualisiert.
+      </p>
+    </div>
+    <form method="POST">
+      <input type="hidden" name="_csrf" value={csrfToken} />
+      <input type="hidden" name="_action" value="import" />
+      <button type="submit" class="btn btn-secondary">🔄 Schulferien aktualisieren</button>
+    </form>
+  </div>
+
+  <!-- Neue Pause erstellen -->
+  <div class="card mb-6">
+    <h2 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">Eigene Pause / Feiertag hinzufügen</h2>
+    <form method="POST">
+      <input type="hidden" name="_csrf" value={csrfToken} />
+      <input type="hidden" name="_action" value="create" />
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="new-name">Bezeichnung *</label>
+          <input type="text" id="new-name" name="name" required maxlength="200" placeholder="z.B. Betriebsferien, Feiertag" />
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="new-start">Von *</label>
+          <input type="date" id="new-start" name="date_start" required />
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="new-end">Bis *</label>
+          <input type="date" id="new-end" name="date_end" required />
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 2fr auto; gap: 0.75rem; margin-top: 0.75rem; align-items: end;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="new-status">Status</label>
+          <select id="new-status" name="status">
+            <option value="info">Info (nur Hinweis)</option>
+            <option value="normal">Normalbetrieb</option>
+            <option value="reduced">Eingeschränkt</option>
+            <option value="closed">Geschlossen</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="new-note">Notiz (optional)</label>
+          <input type="text" id="new-note" name="note" maxlength="500" placeholder="z.B. Einzelstunden nach Absprache möglich" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="height: 42px;">Hinzufügen</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Liste -->
+  {holidays.length === 0 ? (
+    <div class="card" style="text-align: center; padding: 2rem; color: var(--gray-muted);">
+      Noch keine Ferien/Pausen vorhanden. Importiere Schulferien oder erstelle einen manuellen Eintrag.
+    </div>
+  ) : (
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <table>
+        <thead>
+          <tr>
+            <th>Bezeichnung</th>
+            <th>Zeitraum</th>
+            <th>Typ</th>
+            <th>Status</th>
+            <th style="width: 80px;">Aktiv</th>
+            <th style="width: 140px;">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          {holidays.map((h: any) => {
+            const statusBadge = getStatusBadge(h.status);
+            const typeBadge = getTypeBadge(h.type);
+            const today = new Date().toISOString().slice(0, 10);
+            const isPast = h.date_end < today;
+            return (
+              <tr style={isPast || !h.active ? 'opacity: 0.5;' : ''}>
+                <td style="font-weight: 500;">
+                  {h.name}
+                  {h.note && <span class="text-sm text-muted" style="display: block; font-weight: 400;">{h.note}</span>}
+                </td>
+                <td class="text-sm">{formatDate(h.date_start)} – {formatDate(h.date_end)}</td>
+                <td><span class={`badge ${typeBadge.cls}`}>{typeBadge.label}</span></td>
+                <td><span class={`badge ${statusBadge.cls}`}>{statusBadge.label}</span></td>
+                <td>
+                  {h.active
+                    ? <span class="badge badge-green">Aktiv</span>
+                    : <span class="badge badge-gray">Inaktiv</span>
+                  }
+                </td>
+                <td>
+                  <div class="flex gap-2">
+                    <a href={`/admin/holidays/${h.id}`} class="btn btn-secondary btn-sm">Bearbeiten</a>
+                    <form method="POST" style="display:inline;" onsubmit="return confirm('Eintrag wirklich löschen?')">
+                      <input type="hidden" name="_csrf" value={csrfToken} />
+                      <input type="hidden" name="_action" value="delete" />
+                      <input type="hidden" name="id" value={h.id} />
+                      <button type="submit" class="btn btn-danger btn-sm">×</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  )}
+</AdminLayout>

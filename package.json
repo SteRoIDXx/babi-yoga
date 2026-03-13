@@ -4,18 +4,21 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "cms:dev": "npx decap-server",
-    "build": "astro build",
+"build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^9.5.5",
     "@astrojs/sitemap": "^3.7.0",
-    "astro": "^5.17.1"
+    "astro": "^5.17.1",
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.6.2",
+    "marked": "^17.0.4",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.1",
-    "decap-server": "^3.5.2",
     "tailwindcss": "^4.2.1"
   }
 }

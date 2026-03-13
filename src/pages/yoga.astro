@@ -1,6 +1,9 @@
 ---
+export const prerender = false;
+
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
+import { getActiveSchedule, getCurrentHolidays } from '../lib/db';
 
 const yogaTypes = [
   {
@@ -33,26 +36,28 @@ const yogaTypes = [
   },
 ];
 
-const schedule = [
-  { day: 'Montag', classes: [
-    { time: '16:30 – 17:15', name: 'Kinderyoga', detail: '6–9 Jahre' },
-    { time: '17:30 – 18:15', name: 'Teens-Yoga', detail: '9–12 Jahre' },
-  ]},
-  { day: 'Dienstag', classes: [
-    { time: '18:00 – 19:30', name: 'Hatha-Yoga', detail: 'Stufe 1–2' },
-    { time: '19:45 – 21:15', name: 'Hatha-Yoga', detail: 'Stufe 2–3' },
-  ]},
-  { day: 'Mittwoch', classes: [
-    { time: '19:00 – 20:30', name: 'Hatha-Yoga', detail: 'Stufe 0–2' },
-  ]},
-  { day: 'Donnerstag', classes: [
-    { time: '18:00 – 19:30', name: 'Yin-Yoga für Frauen', detail: '' },
-    { time: '19:45 – 21:15', name: 'Mantra-Yoga', detail: 'Stufe 2–3' },
-  ]},
-  { day: 'Freitag', classes: [
-    { time: '09:00 – 10:30', name: 'Sanfte Morgenklasse', detail: 'Alle Stufen' },
-  ]},
-];
+// Kursplan aus der Datenbank laden und nach Tag gruppieren
+const dbSchedule = getActiveSchedule() as any[];
+const dayOrder = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+const scheduleByDay = new Map<string, any[]>();
+for (const entry of dbSchedule) {
+  if (!scheduleByDay.has(entry.day)) scheduleByDay.set(entry.day, []);
+  scheduleByDay.get(entry.day)!.push(entry);
+}
+const schedule = dayOrder
+  .filter(day => scheduleByDay.has(day))
+  .map(day => ({
+    day,
+    classes: scheduleByDay.get(day)!.map(e => ({
+      time: e.time_start,
+      name: e.course_name,
+      detail: e.note || '',
+    })),
+  }));
+
+// Ferien-Banner: Prüfen ob aktuell Ferien sind
+const currentHolidays = getCurrentHolidays() as any[];
+const dateFmt = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 ---
 
 <Layout
@@ -123,6 +128,33 @@ const schedule = [
         <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-2">Wochenplan</h2>
         <p class="fade-in text-gray-muted">Dein Überblick über alle regelmäßigen Klassen</p>
       </div>
+
+      {currentHolidays.length > 0 && (
+        <div class="fade-in mb-6">
+          {currentHolidays.map((h: any) => (
+            <div class="p-4 bg-gold/10 border border-gold/25 rounded-xl flex items-start gap-3 mb-3">
+              <div class="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-dark text-sm">
+                  {h.name}
+                  <span class="font-normal text-charcoal/75 ml-1">
+                    ({dateFmt.format(new Date(h.date_start + 'T00:00:00'))} – {dateFmt.format(new Date(h.date_end + 'T00:00:00'))})
+                  </span>
+                </p>
+                {h.status === 'closed' && <p class="text-sm text-wine font-medium mt-0.5">Alle Kurse pausieren in diesem Zeitraum.</p>}
+                {h.status === 'reduced' && <p class="text-sm text-charcoal/80 mt-0.5">Eingeschränkter Kursbetrieb — bitte aktuelle Zeiten beachten.</p>}
+                {h.status === 'normal' && <p class="text-sm text-charcoal/80 mt-0.5">Der Kursbetrieb läuft regulär weiter.</p>}
+                {h.status === 'info' && <p class="text-sm text-charcoal/80 mt-0.5">Bitte aktuelle Infos beachten.</p>}
+                {h.note && <p class="text-xs text-charcoal/70 mt-1">{h.note}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div class="fade-in bg-white rounded-2xl overflow-hidden shadow-sm border border-sand-dark">
         {schedule.map((day, i) => (

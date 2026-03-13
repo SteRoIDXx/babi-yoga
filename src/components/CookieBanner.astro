@@ -1,0 +1,39 @@
+---
+// Cookie-Banner: Informiert Besucher, dass keine Cookies verwendet werden
+---
+
+<div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-[999] bg-white/95 backdrop-blur-sm border-t border-wine/15 shadow-lg transform translate-y-full transition-transform duration-500 ease-out">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+    <div class="flex-1 text-sm text-night/70">
+      <p class="m-0">
+        <strong class="text-night">Keine Cookies, kein Tracking.</strong>
+        Diese Website verwendet keine Cookies und speichert keine personenbezogenen Daten.
+        <a href="/datenschutz" class="underline text-wine hover:text-wine-light">Mehr erfahren</a>
+      </p>
+    </div>
+    <button
+      id="cookie-dismiss"
+      class="shrink-0 px-5 py-2 bg-wine text-white text-sm font-semibold rounded-full hover:bg-wine-light transition-colors cursor-pointer"
+    >
+      Verstanden
+    </button>
+  </div>
+</div>
+
+<script>
+  function initCookieBanner() {
+    if (localStorage.getItem('cookie-banner-dismissed')) return;
+    const banner = document.getElementById('cookie-banner');
+    if (!banner) return;
+    setTimeout(() => {
+      banner.classList.remove('translate-y-full');
+      banner.classList.add('translate-y-0');
+    }, 1500);
+    document.getElementById('cookie-dismiss')?.addEventListener('click', () => {
+      banner.classList.remove('translate-y-0');
+      banner.classList.add('translate-y-full');
+      localStorage.setItem('cookie-banner-dismissed', '1');
+    });
+  }
+  initCookieBanner();
+</script>

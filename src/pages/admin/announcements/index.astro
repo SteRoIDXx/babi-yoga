@@ -1,0 +1,142 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { getAllAnnouncements, createAnnouncement, updateAnnouncement, deleteAnnouncement, moveAnnouncement } from '../../../lib/db';
+import { validateCsrfToken, generateCsrfToken } from '../../../lib/auth';
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const csrf = formData.get('_csrf') as string;
+  const action = formData.get('_action') as string;
+
+  if (validateCsrfToken(csrf)) {
+    if (action === 'create') {
+      const title = (formData.get('title') as string || '').trim();
+      const link = (formData.get('link') as string || '').trim();
+      if (title && title.length <= 200) {
+        createAnnouncement({ title, link: link || undefined });
+      }
+    } else if (action === 'update') {
+      const id = Number(formData.get('id'));
+      const title = (formData.get('title') as string || '').trim();
+      const link = (formData.get('link') as string || '').trim();
+      const active = formData.get('active') === '1';
+      if (id && title) {
+        updateAnnouncement(id, { title, link: link || undefined, active });
+      }
+    } else if (action === 'delete') {
+      const id = Number(formData.get('id'));
+      if (id) deleteAnnouncement(id);
+    } else if (action === 'move') {
+      const id = Number(formData.get('id'));
+      const direction = formData.get('direction') as 'up' | 'down';
+      if (id && direction) moveAnnouncement(id, direction);
+    }
+  }
+}
+
+const announcements = getAllAnnouncements() as any[];
+const csrfToken = generateCsrfToken();
+---
+
+<AdminLayout title="Ankündigungen" activeNav="announcements">
+  <h1 class="page-title">Ankündigungen (Ticker)</h1>
+  <p class="text-sm text-muted mb-6">Diese Texte laufen als Ticker-Band über die Startseite.</p>
+
+  <!-- Neue Ankündigung -->
+  <div class="card mb-6">
+    <h2 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">Neue Ankündigung</h2>
+    <form method="POST">
+      <input type="hidden" name="_csrf" value={csrfToken} />
+      <input type="hidden" name="_action" value="create" />
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 0.75rem; align-items: end;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="new-title">Text *</label>
+          <input type="text" id="new-title" name="title" required maxlength="200" placeholder="z.B. Ferien — Aktuelle Ferienzeiten beachten" />
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="new-link">Link (optional)</label>
+          <input type="url" id="new-link" name="link" maxlength="500" placeholder="https://..." />
+        </div>
+        <button type="submit" class="btn btn-primary" style="height: 42px;">Hinzufügen</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Liste -->
+  {announcements.length === 0 ? (
+    <div class="card" style="text-align: center; padding: 2rem; color: var(--gray-muted);">
+      Noch keine Ankündigungen vorhanden.
+    </div>
+  ) : (
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 60px;">Pos.</th>
+            <th>Text</th>
+            <th>Link</th>
+            <th style="width: 80px;">Status</th>
+            <th style="width: 160px;">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          {announcements.map((item: any, index: number) => (
+            <tr style={!item.active ? 'opacity: 0.5;' : ''}>
+              <td>
+                <div class="flex gap-2">
+                  <form method="POST" style="display:inline;">
+                    <input type="hidden" name="_csrf" value={csrfToken} />
+                    <input type="hidden" name="_action" value="move" />
+                    <input type="hidden" name="id" value={item.id} />
+                    <input type="hidden" name="direction" value="up" />
+                    <button type="submit" class="btn btn-secondary btn-sm" disabled={index === 0} style="padding: 0.25rem 0.5rem;">↑</button>
+                  </form>
+                  <form method="POST" style="display:inline;">
+                    <input type="hidden" name="_csrf" value={csrfToken} />
+                    <input type="hidden" name="_action" value="move" />
+                    <input type="hidden" name="id" value={item.id} />
+                    <input type="hidden" name="direction" value="down" />
+                    <button type="submit" class="btn btn-secondary btn-sm" disabled={index === announcements.length - 1} style="padding: 0.25rem 0.5rem;">↓</button>
+                  </form>
+                </div>
+              </td>
+              <td style="font-weight: 500;">{item.title}</td>
+              <td class="text-sm text-muted">
+                {item.link ? <a href={item.link} target="_blank" rel="noopener noreferrer" style="color: var(--wine);">{item.link.substring(0, 40)}...</a> : '–'}
+              </td>
+              <td>
+                {item.active
+                  ? <span class="badge badge-green">Aktiv</span>
+                  : <span class="badge badge-gray">Inaktiv</span>
+                }
+              </td>
+              <td>
+                <div class="flex gap-2">
+                  <form method="POST" style="display:inline;">
+                    <input type="hidden" name="_csrf" value={csrfToken} />
+                    <input type="hidden" name="_action" value="update" />
+                    <input type="hidden" name="id" value={item.id} />
+                    <input type="hidden" name="title" value={item.title} />
+                    <input type="hidden" name="link" value={item.link || ''} />
+                    <input type="hidden" name="active" value={item.active ? '0' : '1'} />
+                    <button type="submit" class="btn btn-secondary btn-sm">
+                      {item.active ? 'Deaktivieren' : 'Aktivieren'}
+                    </button>
+                  </form>
+                  <form method="POST" style="display:inline;" onsubmit="return confirm('Ankündigung löschen?')">
+                    <input type="hidden" name="_csrf" value={csrfToken} />
+                    <input type="hidden" name="_action" value="delete" />
+                    <input type="hidden" name="id" value={item.id} />
+                    <button type="submit" class="btn btn-danger btn-sm">×</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+</AdminLayout>

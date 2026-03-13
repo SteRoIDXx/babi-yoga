@@ -1,0 +1,176 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { getAllSchedule, createScheduleEntry, updateScheduleEntry, deleteScheduleEntry } from '../../../lib/db';
+import { validateCsrfToken, generateCsrfToken } from '../../../lib/auth';
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const csrf = formData.get('_csrf') as string;
+  const action = formData.get('_action') as string;
+
+  if (validateCsrfToken(csrf)) {
+    if (action === 'create') {
+      const day = (formData.get('day') as string || '').trim();
+      const time_start = (formData.get('time_start') as string || '').trim();
+      const course_name = (formData.get('course_name') as string || '').trim();
+      const instructor = (formData.get('instructor') as string || '').trim();
+      const note = (formData.get('note') as string || '').trim();
+      if (day && time_start && course_name) {
+        createScheduleEntry({ day, time_start, course_name, instructor, note: note || undefined });
+      }
+    } else if (action === 'update') {
+      const id = Number(formData.get('id'));
+      const day = (formData.get('day') as string || '').trim();
+      const time_start = (formData.get('time_start') as string || '').trim();
+      const course_name = (formData.get('course_name') as string || '').trim();
+      const instructor = (formData.get('instructor') as string || '').trim();
+      const note = (formData.get('note') as string || '').trim();
+      const active = formData.get('active') === '1';
+      if (id && day && time_start && course_name) {
+        updateScheduleEntry(id, { day, time_start, course_name, instructor, note: note || undefined, active });
+      }
+    } else if (action === 'toggle') {
+      const id = Number(formData.get('id'));
+      const currentActive = formData.get('current_active') === '1';
+      const entry = getAllSchedule().find((s: any) => s.id === id) as any;
+      if (entry) {
+        updateScheduleEntry(id, { ...entry, active: !currentActive });
+      }
+    } else if (action === 'delete') {
+      const id = Number(formData.get('id'));
+      if (id) deleteScheduleEntry(id);
+    }
+  }
+}
+
+const schedule = getAllSchedule() as any[];
+const csrfToken = generateCsrfToken();
+const days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+const editId = Number(Astro.url.searchParams.get('edit')) || null;
+const editEntry = editId ? schedule.find((s: any) => s.id === editId) as any : null;
+---
+
+<AdminLayout title="Kursplan" activeNav="schedule">
+  <h1 class="page-title">Kursplan</h1>
+  <p class="text-sm text-muted mb-6">Wochenübersicht der Yoga-Kurse. Änderungen werden auf der Website sichtbar.</p>
+
+  <!-- Neuer Kurs / Bearbeiten -->
+  <div class="card mb-6">
+    <h2 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">
+      {editEntry ? `Kurs bearbeiten: ${editEntry.course_name}` : 'Neuen Kurs hinzufügen'}
+    </h2>
+    <form method="POST">
+      <input type="hidden" name="_csrf" value={csrfToken} />
+      <input type="hidden" name="_action" value={editEntry ? 'update' : 'create'} />
+      {editEntry && <input type="hidden" name="id" value={editEntry.id} />}
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; align-items: end;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="day">Tag *</label>
+          <select id="day" name="day" required>
+            <option value="">Bitte wählen</option>
+            {days.map(d => <option value={d} selected={editEntry?.day === d}>{d}</option>)}
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="time_start">Uhrzeit *</label>
+          <input type="time" id="time_start" name="time_start" required value={editEntry?.time_start || ''} />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="course_name">Kursname *</label>
+          <input type="text" id="course_name" name="course_name" required maxlength="100" value={editEntry?.course_name || ''} placeholder="z.B. Hatha Yoga" />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="instructor">Leitung</label>
+          <input type="text" id="instructor" name="instructor" maxlength="100" value={editEntry?.instructor || ''} placeholder="z.B. Nikola" />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="note">Notiz</label>
+          <input type="text" id="note" name="note" maxlength="200" value={editEntry?.note || ''} placeholder="z.B. Vertretung, Ausfall" />
+        </div>
+
+        {editEntry && (
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" name="active" value="1" checked={editEntry.active} style="width: 18px; height: 18px; accent-color: var(--wine);" />
+              Aktiv
+            </label>
+          </div>
+        )}
+      </div>
+
+      <div class="flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">{editEntry ? 'Speichern' : 'Hinzufügen'}</button>
+        {editEntry && <a href="/admin/schedule/" class="btn btn-secondary">Abbrechen</a>}
+      </div>
+    </form>
+  </div>
+
+  <!-- Wochenplan -->
+  {schedule.length === 0 ? (
+    <div class="card" style="text-align: center; padding: 2rem; color: var(--gray-muted);">
+      Noch keine Kurse im Wochenplan.
+    </div>
+  ) : (
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <table>
+        <thead>
+          <tr>
+            <th>Tag</th>
+            <th>Uhrzeit</th>
+            <th>Kurs</th>
+            <th>Leitung</th>
+            <th>Notiz</th>
+            <th style="width: 80px;">Status</th>
+            <th style="width: 140px;">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          {schedule.map((entry: any) => (
+            <tr style={!entry.active ? 'opacity: 0.5;' : ''}>
+              <td style="font-weight: 500;">{entry.day}</td>
+              <td>{entry.time_start}</td>
+              <td style="font-weight: 500;">{entry.course_name}</td>
+              <td class="text-muted">{entry.instructor || '–'}</td>
+              <td>
+                {entry.note
+                  ? <span class="badge badge-yellow">{entry.note}</span>
+                  : <span class="text-muted">–</span>
+                }
+              </td>
+              <td>
+                {entry.active
+                  ? <span class="badge badge-green">Aktiv</span>
+                  : <span class="badge badge-gray">Aus</span>
+                }
+              </td>
+              <td>
+                <div class="flex gap-2">
+                  <a href={`/admin/schedule/?edit=${entry.id}`} class="btn btn-secondary btn-sm">✏️</a>
+                  <form method="POST" style="display:inline;">
+                    <input type="hidden" name="_csrf" value={csrfToken} />
+                    <input type="hidden" name="_action" value="toggle" />
+                    <input type="hidden" name="id" value={entry.id} />
+                    <input type="hidden" name="current_active" value={entry.active ? '1' : '0'} />
+                    <button type="submit" class="btn btn-secondary btn-sm">{entry.active ? '⏸' : '▶'}</button>
+                  </form>
+                  <form method="POST" style="display:inline;" onsubmit="return confirm('Kurs löschen?')">
+                    <input type="hidden" name="_csrf" value={csrfToken} />
+                    <input type="hidden" name="_action" value="delete" />
+                    <input type="hidden" name="id" value={entry.id} />
+                    <button type="submit" class="btn btn-danger btn-sm">×</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+</AdminLayout>

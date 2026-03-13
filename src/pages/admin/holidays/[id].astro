@@ -1,0 +1,119 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { getHolidayById, updateHoliday, deleteHoliday } from '../../../lib/db';
+import { validateCsrfToken, generateCsrfToken } from '../../../lib/auth';
+
+const id = Number(Astro.params.id);
+let holiday = getHolidayById(id) as any;
+
+if (!holiday) return Astro.redirect('/admin/holidays/');
+
+let errors: string[] = [];
+let successMsg = '';
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const csrf = formData.get('_csrf') as string;
+  const action = formData.get('_action') as string;
+
+  if (!validateCsrfToken(csrf)) {
+    errors.push('Sitzung abgelaufen.');
+  } else if (action === 'delete') {
+    deleteHoliday(id);
+    return Astro.redirect('/admin/holidays/');
+  } else {
+    const name = (formData.get('name') as string || '').trim();
+    const date_start = formData.get('date_start') as string || '';
+    const date_end = formData.get('date_end') as string || '';
+    const status = formData.get('status') as string || 'info';
+    const note = (formData.get('note') as string || '').trim();
+    const active = formData.get('active') === '1';
+
+    if (!name) errors.push('Bezeichnung ist erforderlich.');
+    if (!date_start) errors.push('Startdatum ist erforderlich.');
+    if (!date_end) errors.push('Enddatum ist erforderlich.');
+
+    if (errors.length === 0) {
+      updateHoliday(id, { name, date_start, date_end, status, note: note || undefined, active });
+      holiday = getHolidayById(id);
+      successMsg = 'Änderungen gespeichert!';
+    }
+  }
+}
+
+const csrfToken = generateCsrfToken();
+const isSchool = holiday.type === 'school';
+---
+
+<AdminLayout title={`${holiday.name} bearbeiten`} activeNav="holidays">
+  <div class="flex items-center gap-4 mb-6">
+    <a href="/admin/holidays/" style="color: var(--charcoal); text-decoration: none;">← Zurück</a>
+    <h1 class="page-title" style="margin-bottom: 0;">Ferien bearbeiten</h1>
+  </div>
+
+  {errors.length > 0 && <div class="alert alert-error">{errors.map(e => <div>{e}</div>)}</div>}
+  {successMsg && <div class="alert alert-success">{successMsg}</div>}
+
+  {isSchool && (
+    <div class="alert alert-warning">
+      Automatisch importiert (schulferien-api.de) — wird beim nächsten Import überschrieben.
+      Du kannst Status und Notiz ändern, aber Name und Daten werden beim Import zurückgesetzt.
+    </div>
+  )}
+
+  <form method="POST" class="card">
+    <input type="hidden" name="_csrf" value={csrfToken} />
+
+    <div class="form-group">
+      <label for="name">Bezeichnung *</label>
+      <input type="text" id="name" name="name" required maxlength="200" value={holiday.name} />
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div class="form-group">
+        <label for="date_start">Von *</label>
+        <input type="date" id="date_start" name="date_start" required value={holiday.date_start} />
+      </div>
+      <div class="form-group">
+        <label for="date_end">Bis *</label>
+        <input type="date" id="date_end" name="date_end" required value={holiday.date_end} />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        <option value="info" selected={holiday.status === 'info'}>Info (nur Hinweis)</option>
+        <option value="normal" selected={holiday.status === 'normal'}>Normalbetrieb</option>
+        <option value="reduced" selected={holiday.status === 'reduced'}>Eingeschränkt</option>
+        <option value="closed" selected={holiday.status === 'closed'}>Geschlossen</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="note">Notiz (optional)</label>
+      <input type="text" id="note" name="note" maxlength="500" value={holiday.note || ''} placeholder="z.B. Einzelstunden nach Absprache möglich" />
+    </div>
+
+    <div class="form-group">
+      <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+        <input type="checkbox" name="active" value="1" checked={holiday.active} style="width: 18px; height: 18px; accent-color: var(--wine);" />
+        Aktiv (sichtbar auf der Website)
+      </label>
+    </div>
+
+    <div class="flex items-center justify-between mt-4">
+      <div class="flex gap-2">
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        <a href="/admin/holidays/" class="btn btn-secondary">Abbrechen</a>
+      </div>
+
+      <form method="POST" style="display:inline;" onsubmit="return confirm('Eintrag wirklich löschen?')">
+        <input type="hidden" name="_csrf" value={csrfToken} />
+        <input type="hidden" name="_action" value="delete" />
+        <button type="submit" class="btn btn-danger btn-sm">Löschen</button>
+      </form>
+    </div>
+  </form>
+</AdminLayout>
