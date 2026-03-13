@@ -6,6 +6,7 @@ import Hero from '../components/Hero.astro';
 import Ticker from '../components/Ticker.astro';
 import SectionTeaser from '../components/SectionTeaser.astro';
 import BlogCard from '../components/BlogCard.astro';
+import TestimonialsCarousel from '../components/TestimonialsCarousel.astro';
 import { getPublishedPosts } from '../lib/db';
 
 const recentPosts = (getPublishedPosts() as any[]).slice(0, 3);
@@ -138,8 +139,11 @@ const recentPosts = (getPublishedPosts() as any[]).slice(0, 3);
     bgClass="bg-warm-white"
   />
 
+  <!-- Kundenstimmen -->
+  <TestimonialsCarousel />
+
   <!-- Kontakt CTA -->
-  <section class="section-padding bg-cream">
+  <section class="section-padding bg-warm-white">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 class="fade-in font-heading text-2xl font-bold text-dark mb-4">Neugierig geworden?</h2>
       <p class="fade-in text-charcoal/80 text-lg mb-3">

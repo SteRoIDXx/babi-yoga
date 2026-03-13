@@ -1,0 +1,312 @@
+---
+import { testimonials } from '../data/testimonials';
+
+// Wir zeigen eine kuratierte Auswahl — die stärksten, vielseitigsten Stimmen
+const featured = [
+  testimonials[0],   // Verena — Schwangerschaft, Kraft
+  testimonials[2],   // Doreen — Gelassenheit
+  testimonials[10],  // Jenny — Inspiration
+  testimonials[3],   // Sandra M. — Wochenende, geistige Ebene
+  testimonials[6],   // Britta — Workshop, Laufen
+  testimonials[8],   // Nicole — Yin Yoga
+  testimonials[4],   // Malte — Übungsvariation
+  testimonials[14],  // Kerstin — Mix aus allem
+  testimonials[15],  // Sandra T. — authentisch
+];
+---
+
+<section class="section-padding bg-cream overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <div class="fade-in mb-4">
+        <span class="section-label">Erfahrungen</span>
+      </div>
+      <div class="fade-in flex justify-center mb-6">
+        <hr class="section-divider" />
+      </div>
+      <h2 class="fade-in font-heading font-bold text-dark" style="font-size: var(--text-section);">
+        Was unsere Teilnehmer sagen
+      </h2>
+    </div>
+
+    <!-- Carousel -->
+    <div class="fade-in testimonials-carousel relative" data-carousel>
+      <!-- Track -->
+      <div class="testimonials-track" data-track>
+        {featured.map((t, i) => (
+          <div class="testimonials-slide" data-slide>
+            <div class="h-full bg-white rounded-2xl border border-sand-dark p-7 sm:p-8 flex flex-col transition-shadow duration-300 hover:shadow-md">
+              <!-- Quote Icon -->
+              <svg class="w-8 h-8 text-gold/40 mb-4 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+              </svg>
+              <!-- Text -->
+              <p class="text-charcoal/80 leading-relaxed italic flex-1 mb-5" style="font-family: var(--font-heading); font-weight: 400;">
+                &bdquo;{t.text}&ldquo;
+              </p>
+              <!-- Name -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-[2px] bg-gradient-to-r from-wine to-gold/60 rounded-full"></div>
+                <span class="text-sm font-semibold text-wine">{t.name}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Navigation Arrows -->
+      <button
+        class="carousel-arrow carousel-arrow-prev"
+        data-prev
+        aria-label="Vorherige Stimmen"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+      </button>
+      <button
+        class="carousel-arrow carousel-arrow-next"
+        data-next
+        aria-label="Nächste Stimmen"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+      </button>
+
+      <!-- Dots -->
+      <div class="flex justify-center gap-2 mt-8" data-dots></div>
+    </div>
+
+    <!-- Link to full page -->
+    <div class="fade-in text-center mt-10">
+      <a href="/kundenstimmen" class="inline-flex items-center gap-2 text-wine font-semibold hover:gap-3 transition-all duration-300 group">
+        Alle Stimmen lesen
+        <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M5 12h14m-7-7l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .testimonials-track {
+    display: flex;
+    gap: 1.25rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0.25rem;
+  }
+  .testimonials-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .testimonials-slide {
+    flex: 0 0 calc(100% - 1rem);
+    scroll-snap-align: start;
+    min-height: 0;
+  }
+
+  @media (min-width: 640px) {
+    .testimonials-slide {
+      flex: 0 0 calc(50% - 0.75rem);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .testimonials-slide {
+      flex: 0 0 calc(33.333% - 0.85rem);
+    }
+  }
+
+  /* JS-enhanced: hide scrollbar overflow, use arrows */
+  .testimonials-carousel.js-ready .testimonials-track {
+    overflow: hidden;
+  }
+
+  .carousel-arrow {
+    display: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-70%);
+    width: 44px;
+    height: 44px;
+    border-radius: 9999px;
+    background: white;
+    border: 1.5px solid var(--color-sand-dark);
+    color: var(--color-wine);
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-out-smooth);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    z-index: 10;
+  }
+  .carousel-arrow:hover {
+    background: var(--color-wine);
+    border-color: var(--color-wine);
+    color: white;
+    box-shadow: 0 4px 16px rgba(120, 29, 76, 0.2);
+    transform: translateY(-70%) scale(1.05);
+  }
+  .carousel-arrow:disabled {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .carousel-arrow-prev { left: -1rem; }
+  .carousel-arrow-next { right: -1rem; }
+
+  @media (min-width: 1024px) {
+    .carousel-arrow-prev { left: -1.5rem; }
+    .carousel-arrow-next { right: -1.5rem; }
+  }
+
+  .testimonials-carousel.js-ready .carousel-arrow {
+    display: flex;
+  }
+</style>
+
+<script>
+  function initCarousel() {
+    const carousel = document.querySelector('[data-carousel]') as HTMLElement;
+    if (!carousel) return;
+
+    const track = carousel.querySelector('[data-track]') as HTMLElement;
+    const slides = Array.from(carousel.querySelectorAll('[data-slide]')) as HTMLElement[];
+    const prevBtn = carousel.querySelector('[data-prev]') as HTMLButtonElement;
+    const nextBtn = carousel.querySelector('[data-next]') as HTMLButtonElement;
+    const dotsContainer = carousel.querySelector('[data-dots]') as HTMLElement;
+
+    if (!track || slides.length === 0) return;
+
+    carousel.classList.add('js-ready');
+
+    let currentIndex = 0;
+    let autoplayTimer: ReturnType<typeof setInterval> | null = null;
+    let isPaused = false;
+
+    function getSlidesPerView(): number {
+      if (window.innerWidth >= 1024) return 3;
+      if (window.innerWidth >= 640) return 2;
+      return 1;
+    }
+
+    function getMaxIndex(): number {
+      return Math.max(0, slides.length - getSlidesPerView());
+    }
+
+    function updatePosition() {
+      const slide = slides[0];
+      if (!slide) return;
+      const gap = 20; // 1.25rem
+      const slideWidth = slide.offsetWidth + gap;
+      track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+      track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex >= getMaxIndex();
+
+      updateDots();
+    }
+
+    function goTo(index: number) {
+      currentIndex = Math.max(0, Math.min(index, getMaxIndex()));
+      updatePosition();
+    }
+
+    function next() {
+      if (currentIndex >= getMaxIndex()) {
+        goTo(0); // Loop back
+      } else {
+        goTo(currentIndex + 1);
+      }
+    }
+
+    function prev() {
+      goTo(currentIndex - 1);
+    }
+
+    // Dots
+    function createDots() {
+      dotsContainer.innerHTML = '';
+      const totalDots = getMaxIndex() + 1;
+      for (let i = 0; i < totalDots; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'w-2 h-2 rounded-full transition-all duration-300';
+        dot.setAttribute('aria-label', `Gruppe ${i + 1}`);
+        dot.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(dot);
+      }
+      updateDots();
+    }
+
+    function updateDots() {
+      const dots = dotsContainer.children;
+      for (let i = 0; i < dots.length; i++) {
+        const dot = dots[i] as HTMLElement;
+        if (i === currentIndex) {
+          dot.className = 'w-6 h-2 rounded-full transition-all duration-300 bg-wine';
+        } else {
+          dot.className = 'w-2 h-2 rounded-full transition-all duration-300 bg-sand-dark hover:bg-wine/40';
+        }
+      }
+    }
+
+    // Autoplay
+    function startAutoplay() {
+      stopAutoplay();
+      autoplayTimer = setInterval(() => {
+        if (!isPaused) next();
+      }, 6000);
+    }
+
+    function stopAutoplay() {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    }
+
+    // Events
+    prevBtn.addEventListener('click', () => { prev(); startAutoplay(); });
+    nextBtn.addEventListener('click', () => { next(); startAutoplay(); });
+
+    carousel.addEventListener('mouseenter', () => { isPaused = true; });
+    carousel.addEventListener('mouseleave', () => { isPaused = false; });
+
+    // Touch swipe
+    let touchStartX = 0;
+    let touchEndX = 0;
+    track.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+    track.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) next(); else prev();
+        startAutoplay();
+      }
+    }, { passive: true });
+
+    // Resize
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (currentIndex > getMaxIndex()) currentIndex = getMaxIndex();
+        createDots();
+        updatePosition();
+      }, 150);
+    });
+
+    // Init
+    createDots();
+    updatePosition();
+    startAutoplay();
+  }
+
+  // Run on load and on Astro navigation
+  initCarousel();
+  document.addEventListener('astro:after-swap', initCarousel);
+</script>
